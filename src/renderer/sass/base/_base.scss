@@ -1,0 +1,169 @@
+@charset "UTF-8";
+html, body {
+  font-size: 10px;
+  font-style: normal;
+  line-height: 100%;
+  font-family: 'weiYaHei' !important;
+}
+
+body {
+  // width: calc(100vw - 17px);
+  // overflow:hidden;
+}
+
+html, body {
+  background: #f2f2f2;
+  span {
+    &:focus, &:hover, &:active {
+      outline: 0;
+    }
+  }
+  #app {
+    height: 100%;
+  }
+}
+
+
+//删除Input
+input::-ms-clear {
+  display: none;
+}
+input, button {
+  resize: none;
+  outline: none;
+  font-family: 'weiYaHei' !important;
+  color: #444;
+}
+
+textarea {
+  outline: none;
+}
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background: #fff;
+}
+
+ul, ol {
+  margin: 0;
+  padding: 0;
+}
+
+p + p, ul + p, ol + p {
+  margin-top: 0;
+}
+
+button {
+  padding: 0;
+}
+
+a {
+  color: $text_color;
+  cursor: pointer;
+  &:link, &:visited, &:hover, &:focus {
+    color: $text_color;
+    text-decoration: none;
+    transition: all 0.05s linear 0s;
+  }
+  &:focus {
+    outline: none;
+  }
+
+}
+.sd_disable {
+  background-color: #c7c7c7;
+  cursor: not-allowed;
+}
+table {
+  border-collapse: collapse;
+}
+
+i, span, a {
+  *display: inline;
+  letter-spacing: normal;
+  word-spacing: normal;
+}
+
+i, em, cite {
+  font-style: normal;
+}
+
+h1, h2, h3, h4, h4, h6 {
+  font-weight: normal;
+  font-style: normal;
+  line-height: 100%;
+}
+@font-face {
+  font-family: 'iconfont';  /* project id 595299 */
+  src: url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.eot');
+  src: url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.eot?#iefix') format('embedded-opentype'),
+  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.woff') format('woff'),
+  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.ttf') format('truetype'),
+  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.svg#iconfont') format('svg');
+}
+@font-face{
+　　font-family: "weiYaHei";
+　　src: url('/static/front/weiruanyahei.TTF')
+}
+.iconfont {
+  font-family: "iconfont" !important;
+  font-size: 2rem;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  // -webkit-text-stroke-width: 0.2px;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.clearfix {
+  display: block;
+  min-height: 1%;
+}
+
+.clearfix:after {
+  content: ".";
+  display: block;
+  clear: both;
+  height: 0;
+  visibility: hidden;
+}
+
+.fyahei {
+  font-family: $baseFontFamily;
+}
+
+.vam {
+  @extend %vam;
+}
+
+.icon {
+  @extend %display;
+  @extend %vam;
+}
+
+.mb44 {
+  margin-bottom: 44px;
+}
+.mt14{
+  margin-top:14px;
+}
+.mb20{
+  margin-bottom:20px;
+}
+.ovh {
+  @extend %ovh;
+}
+.fwb{
+  @extend %fwb;
+}
+.minheight {
+  @extend %minHeight;
+}
+
+.bg-white {
+  background: #fff;
+}
+.tar{
+  @include textAlign(right);
+}
+.relative{
+  @extend %relative;
+}

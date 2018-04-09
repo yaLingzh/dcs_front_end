@@ -1,0 +1,277 @@
+@charset "UTF-8";
+.iconfont{
+ @extend %display;
+ @include vam
+}
+.icon-logo{
+  width:2.1rem;
+  height:2rem;
+  margin:0 1.5rem;
+  font-size:2rem;
+  background:url(../assets/logo.png) no-repeat center center;
+}
+.icon-header-build{
+  color:#2f80d9;
+  font-size:4rem;
+  &:after{
+    content:'\e7e6';
+  }
+}
+.icon-header-open{
+  color:#34af47;
+  &:after{
+    content:'\e600';
+  }
+}
+.icon-header-save{
+  &:after{
+    content:'\e612';
+  }
+}
+.icon-header-addFirst, .icon-menu-break{
+  &:after{
+    content:'\e653';
+  }
+}
+.icon-header-add{
+  &:after{
+    content:'\e606';
+  }
+}
+
+.icon-header-zu{
+  &:after{
+    content:'\e629';
+  }
+}
+.icon-header-language{
+  &:after{
+    content:'\e617';
+  }
+}
+.icon-header-language-en{
+  &:after{
+    content:'\e79c';
+  }
+}
+.icon-header-goon{
+  &:after{
+    content:'\e702';
+  }
+}
+.icon-header-see{
+  &:after{
+    content:'\e616';
+  }
+}
+.icon-header-set{
+  &:after{
+    content:'\e62a';
+  }
+}
+.icon-header-test{
+  &:after{
+    content:'\e6da';
+  }
+}
+
+
+.icon-menu-see{
+  font-size:2rem;
+  &:after{
+    content:'\e628';
+  }
+}
+
+.icon-header-log{
+  font-size:2.6rem;
+  &:after{
+    content:'\e602';
+  }
+}
+.icon-header-report{
+  font-size:2.8rem;
+  &:after{
+    content:'\e661';
+  }
+}
+.icon-header-record{
+  font-size:2.8rem;
+  &:after{
+    content:'\e63c';
+  }
+}
+
+.icon-header-config{
+  font-size:2.8rem;
+  &:after{
+    content:'\e61e';
+  }
+}
+.icon-header-singleplay{
+  font-size:2.8rem;
+  &:after{
+    content:'\e624';
+  }
+}
+.icon-header-play{
+  font-size:2.8rem;
+  &:after{
+    content:'\e6e3';
+  }
+}
+
+.icon-header-pause{
+  font-size:2.8rem;
+  &:after{
+    content:'\e60a';
+  }
+}
+
+.icon-header-repeat{
+  font-size:2.8rem;
+  &:after{
+    content:'\e60c';
+  }
+}
+
+.icon-header-stop{
+  font-size:2.8rem;
+  &:after{
+    content:'\e603';
+  }
+}
+
+
+.icon-header-out{
+  font-size:2.8rem;
+  &:after{
+    content:'\e7b0';
+  }
+}
+
+.icon-header-fullscreen{
+  font-size:2.8rem;
+  &:after{
+    content:'\e601';
+  }
+}
+
+
+.icon-header-trendAll{
+  font-size:2.8rem;
+  &:after{
+    content:'\e636';
+  }
+}
+
+.icon-header-trendtime{
+  font-size:2.8rem;
+  &:after{
+    content:'\e8eb';
+  }
+}
+
+.icon-header-signal{
+  font-size:2.8rem;
+  &:after{
+    content:'\e695';
+  }
+}
+
+.icon-header-showlist{
+  font-size:2.8rem;
+  &:after{
+    content:'\e627';
+  }
+}
+
+.icon-header-cancelcurrent{
+  font-size:2.8rem;
+  &:after{
+    content:'\e642';
+  }
+}
+
+.icon-header-cancelall{
+  font-size:2.8rem;
+  &:after{
+    content:'\e60f';
+  }
+}
+
+.icon-header-search{
+  font-size:2.8rem;
+  &:after{
+    content:'\e649';
+  }
+}
+
+.icon-header-edit{
+  font-size:2.8rem;
+  &:after{
+    content:'\e604';
+  }
+}
+
+.icon-header-save{
+  font-size:2.8rem;
+  &:after{
+    content:'\e618';
+  }
+}
+
+.icon-header-all{
+  font-size:2.8rem;
+  &:after{
+    content:'\e83c';
+  }
+}
+
+.icon-header-user{
+  font-size:2.8rem;
+  &:after{
+    content:'\e6df';
+  }
+}
+
+.icon-header-usergroup{
+  font-size:2.8rem;
+  &:after{
+    content:'\e637';
+  }
+}
+
+.icon-header-warrant{
+  font-size:2.8rem;
+  &:after{
+    content:'\e605';
+  }
+}
+
+.icon-header-loginout{
+  font-size:2.8rem;
+  &:after{
+    content:'\e65f';
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

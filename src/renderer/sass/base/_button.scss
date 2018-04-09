@@ -1,0 +1,9 @@
+@charset "UTF-8";
+button{
+  border:none;
+  box-shadow:none;
+  background-color:$base_color;
+  color:#fff;
+  @extend %textAlign;
+  border-radius:3px;
+}

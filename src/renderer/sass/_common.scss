@@ -1,0 +1,13 @@
+@import "sassCore/base"; //sass 外库
+@import "sassCore/ext/animate/bounce";
+@import "sassCore/ext/animate/flip";
+@import "base/variable";
+@import "base/mixin"; //studyData mixin 文件
+@import "base/base";  //studyData html css 基础文件 style
+@import "base/button";
+@import "base/pop";//pop 弹层
+@import "base/icon";  //icon 小图标 文件集
+@import "base/header";//头部信息的样式文件
+@import "base/footer";//底部信息的样式文件
+@import "pages/pages";//页面信息的样式文件
+@import "pages/ele-style";//页面信息的样式文件

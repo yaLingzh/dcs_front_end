@@ -1,0 +1,54 @@
+@charset "UTF-8";
+.el-tabs--card{
+	.el-tabs__header{
+		background:#cfd6e0;
+		color:#4583c0;
+		.el-tabs__nav{
+			border:none;
+		}
+	}
+}
+.el-tabs__item{
+	@include height(true, 2.8rem, 2.8rem);
+	margin-top:0.8rem;
+	font-size:1.6rem;
+	color:#4583c0;
+	&.is-active{
+		background:#fff;
+		color:#303133;
+	}
+}
+.el-table {
+	th{
+		// text-align:center;
+		background:#eee;
+	}
+}
+.el-dialog__header{
+	padding:1rem 2rem;
+	background:#4583c0;
+	.el-dialog__title{
+		font-size:1.7rem;
+		color:#fff;
+	}
+	.el-dialog__headerbtn {
+		top:1.2rem;
+		.el-dialog__close{
+			font-size:1.8rem;
+			color:#fff;
+		}
+	}
+}
+.el-dialog__body{
+	padding-top:10px;
+}
+
+.el-form--inline .el-form-item:last-child{
+	display:block;
+	text-align: center;
+	
+}
+
+.dialogButtonBox{
+	padding:0 0 1rem;
+}

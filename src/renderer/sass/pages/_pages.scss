@@ -1,0 +1,124 @@
+@charset "UTF-8";
+.grid-bg-purple-dark {
+  background: #a4c4dd;
+}
+.grid-bg-purple {
+  background: #e6e6e6;
+}
+.grid-bg-purple-light {
+  background: #f7f7f7;
+}
+.grid-content {
+  min-height: 3.6rem;
+  // 分列等高实现
+  padding-bottom:2000px;
+  margin-bottom:-2000px;
+}
+.body-content{
+	overflow: hidden;
+}
+
+
+.left-menu-tree-title{
+	@include height(true, 3.5rem, 3.5rem);
+	@extend %relative;
+	padding:0 1rem;
+	color:#fff;
+	font-size:1.6rem;
+	background:#7fabd8;
+	em{
+		@extend %absolute;
+		right:-0.5rem;
+		top:1rem;
+		width:3rem;
+		height:3rem;
+		color:#fff;
+	}
+}
+.left-menu-tree-tool{
+	padding: 10px;
+	em{
+		color:#fff;
+		font-size:1.8rem;
+		margin-right:1rem;
+	}
+}
+.el-input-group{
+	width:73%;
+}
+
+.grid-middle-title{
+	@extend .left-menu-tree-title;
+	background:#cfd6e0;
+	color:#4583c0;
+	.icon-ele-close{
+		color:#4583c0
+	}
+}
+.grid-left-content{
+	min-height:15rem;
+}
+.grid-middle-content{
+	min-height:20rem;
+	max-height:50.8rem;
+}
+
+.test-record-content{
+	.el-form {
+		padding:1rem 0 1rem 1.5rem;
+		@extend %textAlign;
+		.el-form-item{
+			float: left;
+		}
+	}
+}
+
+.tool-button-content{
+	padding:1.5rem 0;
+	text-align: center;
+	button{
+		margin-right:3.5rem;
+	}
+}
+
+.pop-title{
+	line-height: 3.5rem;
+	margin-bottom:1.5rem;
+	border-bottom:0.1rem solid #4583c0;
+	font-size:1.6rem;
+	em{
+		margin:0 1.2rem;
+		font-size:1.8rem;
+	}
+}
+
+.pop-from-box{
+
+}
+.pop-fl{
+ float: left;
+}
+.pop-fr{
+	@extend %relative;
+	padding-left:0.5rem;
+	float: right;
+}
+.pop-tip{
+	@extend %absolute;
+	right:-2.5rem;
+	top:0.1rem;
+}
+
+.response-container{
+	width:100%;
+	@extend %ovh;
+}
+ .response-right{
+ 	float: right;
+ 	width:40%;
+ }
+ .response-left{
+ 	 float: left;
+ 	 width:58%;
+ 	 background:#eee;
+ }
