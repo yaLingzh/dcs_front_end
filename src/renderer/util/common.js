@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import * as constants from './constants'
-// import entry from './entry.js'
-// import _ from 'lodash'
+// import * as lodash from 'lodash'
 
 import * as axios from 'axios'
 import {sync} from 'vuex-router-sync'
@@ -21,32 +20,54 @@ export function appInitInject(store, router) {
   Vue.prototype.$$ = window.jQuery || window.$
   Vue.prototype.$bus = Bus
 
-  axios.defaults.headers.post['Content-Type'] = 'application/json'
-  
-  // Vue.mixin({
-  //   mounted() {
-  //     this.$$el = $(this.$el)
-  //   }
-  // })
 
+  axios.defaults.baseURL = constants.API_BASE_URL
+  axios.defaults.headers['Content-Type'] = 'application/json'
+  axios.defaults.headers['Access-Control-Allow-Origin : http://10.144.238.103:8080']
 
-  // router.beforeEach((to, from, next) => {
-  //   if (location.pathname === entry.app) {
-  //     if (store.getters[types.GETTERS.isLogged] && store.getters[types.GETTERS.isRoleSelected]) {
-  //       loginUserRole(store)
-  //       return
-  //     }
-  //   }
-  //   next()
-  // })
-  // 首页已登录 进入主页
+  _historyProject()
+  /**
+   * AOP编程方式 设置全局的请求次数，请求的间隙
+   * @type {Number}
+   */
+//   axios.defaults.retry = 4;
+//   axios.defaults.retryDelay = 1000;
+//   axios.interceptors.response.use(undefined, function axiosRetryInterceptor(err) {
+//     var config = err.config;
+//     // If config does not exist or the retry option is not set, reject
+//     if(!config || !config.retry) return Promise.reject(err);
+    
+//     // Set the variable for keeping track of the retry count
+//     config.__retryCount = config.__retryCount || 0;
+    
+//     // Check if we've maxed out the total number of retries
+//     if(config.__retryCount >= config.retry) {
+//         // Reject with the error
+//         return Promise.reject(err);
+//     }
+    
+//     // Increase the retry count
+//     config.__retryCount += 1;
+    
+//     // Create new promise to handle exponential backoff
+//     var backoff = new Promise(function(resolve) {
+//         setTimeout(function() {
+//             resolve();
+//         }, config.retryDelay || 1);
+//     });
+    
+//     // Return the promise in which recalls axios to retry the request
+//     return backoff.then(function() {
+//         return axios(config);
+//     });
+// });
+
 }
 
 export function registerFilters() {
-
   Vue.use(vueFilter)
-
 }
+
 
 /**
  * base64 解码
@@ -73,6 +94,18 @@ export function dataURItoBlob(base64Data) {
   return new Blob([ia], {type: mimeString})
 }
 
+
+/**
+ * base64 编码
+ * @param str
+ * @return {string}
+ */
+export function b64EncodeUnicode(str) {
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function (match, p1) {
+    return String.fromCharCode('0x' + p1)
+  }))
+}
+
 /**
  * 存储 storage 数据，并base64 编码
  */
@@ -96,3 +129,32 @@ export function getStorageDataAndDecode(key, value) {
   }
   return null
 }
+
+/**
+ * 设置 token
+ */
+export function setAxiosToken(token) {
+  // 测试用，过期token
+  // token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IjhhMTA2ZWM0NWMyZWM4ZTMwMTVjMmVjOTNiODMwMDAwIiwidXNlcl9pZCI6MTUsImVtYWlsIjpudWxsLCJleHAiOjExOTU1MzA1MTF9.ZXkFDEOtm4XDZMo7RuzHVmb89MJj_vpCZ9jCvVuQH-M'
+  axios.defaults.headers.common['Authorization'] = getAuthorizationTokenHeaderValue(token)
+}
+export function getAuthorizationTokenHeaderValue(token) {
+  return 'JWT ' + token
+}
+
+function _historyProject(){
+  let vm = this
+  let url = 'project/history'
+  axios.get(url).then(response=>{
+    if(response.status == 200){
+      let historyProjectData = response.data.data
+      localStorage.setItem('historyProject', JSON.stringify(historyProjectData))
+    }else{
+      vm.$message.error('没有历史项目数据')
+    }
+  }).catch(response=>{
+    console.log(response);
+  })
+}
+
+

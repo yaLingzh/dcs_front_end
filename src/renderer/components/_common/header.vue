@@ -9,7 +9,7 @@
 		          <li :class="{navFirstCurrent: currentNav == 'workTest'}" @click="currentNav='workTest'">规程测试</li>
 		          <li :class="{navFirstCurrent: currentNav == 'trend'}" @click="currentNav='trend'">趋势</li>
 		          <li :class="{navFirstCurrent: currentNav == 'record'}" @click="currentNav='record'">记录</li>
-		          <li :class="{navFirstCurrent: currentNav == 'variable'}"><router-link to="/variable">变量组管理</router-link></li>
+		          <li :class="{navFirstCurrent: currentNav == 'variable'}"><a @click="openVariable">变量组管理</a></li>
 		          <li :class="{navFirstCurrent: currentNav == 'account'}" @click="currentNav='account'">账户管理</li>
 		        </ul>
 		        <span class="header-top-rightBtn" @click="status.languageEn = !status.languageEn">
@@ -19,9 +19,9 @@
 		      </div>
 		      <div class="ovh" v-if="currentNav == 'files'">
 		        <dl class="header-nav-child">
-		          <dd class="header-nav-child-current"><a @click="newProject"><em class="iconfont icon-header-build"></em>
+		          <dd v-if="$_.isEmpty(vxGlobal_curProject)&&vxGlobal_isLogged" class="header-nav-child-current"><a @click="newProject"><em class="iconfont icon-header-build"></em>
 		          <p>新建</p></a></dd>
-		          <dd><a href="javascript:;">
+		          <dd v-if="$_.isEmpty(vxGlobal_curProject)&&vxGlobal_isLogged"><a href="javascript:;">
 		          	<el-upload
 		          	  action=""
 								  class="upload-demo"
@@ -130,6 +130,8 @@
   </div>
 </template>
 <script>
+ import types from "../../store/project/types";
+ import {mapGetters } from "vuex";
  export default{
  	name:'headerNav',
  	data(){
@@ -141,6 +143,12 @@
  			}
  		}
  	},
+ 	computed:{
+    ...mapGetters({
+        vxGlobal_curProject: types.GETTERS.curProject,
+        vxGlobal_isLogged: types.GETTERS.isLogged,
+      }),
+  },
  	methods:{
  		newProject(){
  			let vm = this
@@ -211,9 +219,11 @@
     	let vm = this
  			vm.$bus.$emit('authorized', true);
     },
-    
-    
-    
+    openVariable(){
+    	let vm = this
+    	let routerLink = vm.$router.resolve({name: 'variable', path: '/variable'})
+    	window.open(routerLink.href, '_blank')
+    },
  	},
 
  }

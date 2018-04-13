@@ -1,10 +1,10 @@
 <template>
 <div>
-  <top-header></top-header>
-  <div class="body-content">
-    <el-row :gutter="0">
+  <top-header v-if="status.isShowTemplate"></top-header>
+  <div class="body-content" v-if="status.isShowTemplate">
+    <el-row :gutter="0" >
       <el-col :span="4">
-        <left-tree></left-tree>
+        <left-tree ></left-tree>
       </el-col>
       <el-col :span="15">
         <div class="grid-content grid-bg-purple">
@@ -13,18 +13,21 @@
        </div>
        <test-record></test-record>
        <div class="grid-content grid-bg-purple">
-         <record></record>
+         <record ></record>
        </div>
     </el-col>
-      <el-col :span="5"><div class="grid-content grid-bg-purple-light">
-        <p class="grid-middle-title">趋势<em class="el-icon-minus"></em></p>
-        <div class="grid-side-content">
-          <trend></trend>
+      <el-col :span="5">
+        <div class="grid-content grid-bg-purple-light" >
+          <p class="grid-middle-title">趋势<em class="el-icon-minus"></em></p>
+          <div class="grid-side-content">
+            <trend></trend>
+          </div>
         </div>
-      </div></el-col>
+    </el-col>
     </el-row>
   </div>
-  <newProject></newProject>
+  <login></login>
+  <newProject :historyProjectData="historyProjectData"></newProject>
   <add-group></add-group>
   <netWorkSet></netWorkSet>
   <environment-test></environment-test>
@@ -46,16 +49,44 @@
 </template>
 
 <script>
+import types from "../store/project/types";
+import {mapGetters } from "vuex";
 export default {
   name: 'dcs_index',
   data () {
     return {
      searchText:null,
+     historyProjectData:null,
+     status:{
+      isShowTemplate:false
+     },
+     curProject:null,
     }
   },
+  computed:{
+    ...mapGetters({
+        vxGlobal_curProject: types.GETTERS.curProject,
+        vxGlobal_isLogged: types.GETTERS.isLogged,
+      }),
+  },
   methods: {
+
+  },
+  mounted(){
+    let vm = this
+    vm.historyProjectData = JSON.parse(localStorage.getItem('historyProject'))
+    if(!vm.$_.isEmpty(vm.vxGlobal_curProject)&&vm.vxGlobal_isLogged){
+      vm.status.isShowTemplate = true
+    }
+    vm.$bus.$on('mainpageshowbox', msg=>{
+      vm.status.isShowTemplate = msg
+    })
+  },
+  created(){
+    let vm = this
   },
   components:{
+    login: resolve => require(['./login/login.vue'], resolve),
     trend: resolve => require(['./trend/trend.vue'], resolve),
     topHeader: resolve => require(['./_common/header.vue'], resolve),
     record: resolve => require(['./record/record.vue'], resolve),
@@ -82,8 +113,6 @@ export default {
     userManage: resolve => require(['./account/userManage.vue'], resolve), //用户管理
     userGroupManage: resolve => require(['./account/userGroupManage.vue'], resolve), //用户组管理
     authorized: resolve => require(['./account/authorized.vue'], resolve), //日志
-
-
 
   },
 }

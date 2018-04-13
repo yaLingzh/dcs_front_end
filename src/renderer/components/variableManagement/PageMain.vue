@@ -37,8 +37,13 @@ export default {
      searchText:null,
     }
   },
+  created(){
+    let vm = this;
+   
+  },
   methods: {
   },
+
   components:{
     headerNav: resolve => require(['../_common/variableHeader.vue'], resolve),
     trend: resolve => require(['../trend/trend.vue'], resolve),

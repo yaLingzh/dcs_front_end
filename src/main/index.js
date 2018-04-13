@@ -1,4 +1,5 @@
-import { app, BrowserWindow } from 'electron'
+import  electron from "electron";
+// import url from "url";
 
 /**
  * Set `__static` path to static files in production
@@ -8,27 +9,50 @@ if (process.env.NODE_ENV !== 'development') {
   global.__static = require('path').join(__dirname, '/static').replace(/\\/g, '\\\\')
 }
 
+const BrowserWindow = electron.BrowserWindow
+//主进程
+// const ipcMain = electron.ipcMain
+
+const app = electron.app
+
+
 let mainWindow
+let presWindow
 const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
 function createWindow () {
+  // Open the DevTools.
+ if(process.env.NODE_ENV === 'development'){
+  BrowserWindow.addDevToolsExtension("C:/Users/Aimee/AppData/Local/Google/Chrome/User Data/Profile 2/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/4.1.4_0")
+  }
   /**
    * Initial window options
    */
+
   mainWindow = new BrowserWindow({
     height: 563,
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    webPreferences: {
+      // nodeIntegration: false,
+      webSecurity: false, //支持跨域
+    }
   })
 
   mainWindow.loadURL(winURL)
+  
+  //前期为了调试方面，默认打开控制台
+  // mainWindow.webContents.openDevTools({ detach: true });
 
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
 }
+
+
 
 app.on('ready', createWindow)
 
@@ -43,6 +67,7 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
 
 /**
  * Auto Updater

@@ -48,6 +48,18 @@ let mainConfig = {
     libraryTarget: 'commonjs2',
     path: path.join(__dirname, '../dist/electron')
   },
+  // devServer: {
+  //   historyApiFallback: true,
+  //   inline: true,
+  //   noInfo: true,
+  //   proxy: {
+  //       '/api/*': {
+  //           target: 'http://10.144.238.103:8080/',
+  //           changeOrigin:true,
+  //           secure: false
+  //       }
+  //   }
+  // },
   externals: {
     'echarts': 'echarts',
     'lodash': '_'

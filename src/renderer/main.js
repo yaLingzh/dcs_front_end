@@ -5,6 +5,7 @@ import App from './App'
 import router from './router'
 import store from './store'
 import {appInitInject, registerFilters} from './util/common'
+import mixin_app__token from './util/tokenData'
 
 const decamelize = require('decamelize')
 
@@ -20,6 +21,7 @@ decamelize('unicornRainbow', '-');
 new Vue({
   components: { App },
   router,
+  mixins:[mixin_app__token],
   store,
   template: '<App/>'
 }).$mount('#app')
