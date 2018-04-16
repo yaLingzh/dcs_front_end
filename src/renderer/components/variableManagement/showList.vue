@@ -3,35 +3,36 @@
  	  <el-dialog
       title="变量列设置"
       :visible.sync="status.dialogListVisible"
+      :center="true"
       append-to-body>
       <template>
-        <p><em style="padding-right:15px;">一级菜单</em><el-checkbox :indeterminate="status.levelMenuIs" v-model="status.levelMenuCheckAll" @change="levelMenuAllChange">全选</el-checkbox></p>
+        <p> <el-checkbox :indeterminate="isIndeterminate" v-model="checkVariableAll" @change="handleCheckVariableAllChange">全选</el-checkbox></p>
         <!-- <div></div> -->
-        <div style="margin: 15px 0;">
-          <el-checkbox-group v-model="checkedVariable" @change="CheckedLevelVariableChange">
-            <el-checkbox v-for="(variable,index) in variableSettingData" :label="variable" :key="'variable_'+index">{{variable}}</el-checkbox>
+        <div class="variableListbox">
+          <el-checkbox-group v-model="checkedVariable" @change="handleCheckedVariableChange">
+            <el-checkbox v-for="variable in variableSettingData" :label="variable" :key="variable">{{variable}}</el-checkbox>
           </el-checkbox-group>
         </div>
        </template>
        <div slot="footer" class="dialog-footer">
-			    <el-button @click="status.dialogListVisible = false">取 消</el-button>
-			    <el-button type="primary" @click="status.dialogListVisible = false">设置</el-button>
+			    <el-button @click="resetVariableList">取 消</el-button>
+			    <el-button type="primary" @click="selectedVariableList">设置</el-button>
 			  </div>
     </el-dialog>
  </div>
 </template>
 <script>
-	
+	// const cityOptions = ['上海', '北京', '广州', '深圳'];
 	export default{
 		name:'showList',
 		data(){
 			return {
-				status:{
-					dialogListVisible:false,
-  				levelMenuIs:false,
-          levelMenuCheckAll: false,
-				},
-				checkedVariable:null,
+        status:{
+          dialogListVisible:false,
+        },
+        checkVariableAll: false,
+        checkedVariable: [],
+        isIndeterminate: false,
 				variableSettingData:null,
 			}
 		},
@@ -44,31 +45,45 @@
         vm.$axios.get(url).then(response=>{
           if(response.status == 200){
             vm.variableSettingData = response.data.data
-            console.log(vm.variableSettingData);
           }else{
             vm.$message.error('获取设置列表失败！')
           }
         })
       },
 			/*选择*/
-      levelMenuAllChange(val) {
-        this.checkedMenu = val ? levelMenu1 : [];
-        this.levelMenuIs = true;
+       handleCheckVariableAllChange(val) {
+        let vm = this
+        vm.checkedVariable = val ? vm.variableSettingData : [];
+        vm.isIndeterminate = true;
       },
-      CheckedLevelVariableChange(value) {
+      handleCheckedVariableChange(value) {
+        let vm = this
         let checkedCount = value.length;
-        this.levelMenuCheckAll = checkedCount === vm.variableSettingData.length;
-        this.levelMenuIs = checkedCount > 0 && checkedCount < vm.variableSettingData.length;
+        vm.checkVariableAll = checkedCount === vm.variableSettingData.length;
+        vm.isIndeterminate = checkedCount > 0 && checkedCount < vm.variableSettingData.length;
+      },
+      /*取消设置列表*/
+      resetVariableList(){
+        let vm = this;
+        vm.checkedVariable = [];
+        vm.status.dialogListVisible = false;
+      },
+      /*选中设置的列表值*/
+      selectedVariableList(){
+        let vm = this
+        vm.$bus.$emit('checkedVariable', vm.checkedVariable)
+        vm.status.dialogListVisible = false;
       },
 		},
-    mounted(){
+    created(){
       let vm = this
-
+      vm.initVariableSettingData();
        vm.$bus.$on('showList', (msg) => {
          vm.status.dialogListVisible = msg
        })
-
-       vm.initVariableSettingData();
+    },
+    mounted(){
+      let vm = this
     },
 	}
 

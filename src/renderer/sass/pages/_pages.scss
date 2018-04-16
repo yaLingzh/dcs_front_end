@@ -11,8 +11,8 @@
 .grid-content {
   min-height: 3.6rem;
   // 分列等高实现
-  padding-bottom:2000px;
-  margin-bottom:-2000px;
+  padding-bottom:9000px;
+  margin-bottom:-9000px;
 }
 .body-content{
 	overflow: hidden;
@@ -60,7 +60,7 @@
 }
 .grid-middle-content{
 	min-height:20rem;
-	max-height:50.8rem;
+	// max-height:50.8rem;
 }
 
 .test-record-content{
@@ -121,4 +121,28 @@
  	 float: left;
  	 width:58%;
  	 background:#eee;
+ }
+ .variableListbox{
+ 	margin: 1.5rem 0;
+ }
+ .let-var-menus{
+ 	max-height:80rem;
+ 	overflow-y:auto;
+ 	 li{
+ 	 	line-height: 3rem;
+ 	 	padding:1rem 0 1rem 2.5rem;
+ 	 	background:#F2F6FC;
+ 	 	border-bottom:#DCDFE6 solid 1px;
+ 	 	font-size:1.5rem;
+ 	 	@extend %relative;
+ 	 	&:hover, &.active{
+ 	 		background:#409EFF;
+ 	 		color:#fff;
+ 	 	}
+ 	 }
+ }
+ .el-icon-menus{
+ 	@extend %absolute;
+ 	right:2rem;
+ 	top:36%;
  }

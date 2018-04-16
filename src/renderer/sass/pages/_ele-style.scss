@@ -59,3 +59,11 @@
  .el-table th{
 	background:#ebeef5;
 }
+.variableListbox{
+	.el-checkbox{
+		width:150px;
+	}
+	.el-checkbox + .el-checkbox{
+		margin-left:0;
+	}
+}
