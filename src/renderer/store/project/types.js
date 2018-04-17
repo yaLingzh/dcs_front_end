@@ -37,6 +37,14 @@ export default {
      * @type {[Objtc]}
      */
     curProject: namespace + 'curProject',
+    /**
+     * 当前选择的强制列表项
+     */
+    variablePointeList: namespace + 'variablePointeList',
+     /**
+     * 提交选择的强制列表项
+     */
+    submittedPointeList: namespace + 'submittedPointeList',
   
   },
   ACTIONS: {
@@ -51,5 +59,7 @@ export default {
     setCurProjectDatas: namespace + 'setCurProjectDatas',
     setTokenData: namespace + 'setTokenData',
     setToken: namespace + 'setToken',
+    setVariablePointListData: namespace + 'setVariablePointListData',
+    setSubmittedPointeList: namespace + 'setSubmittedPointeList',
   }
 }

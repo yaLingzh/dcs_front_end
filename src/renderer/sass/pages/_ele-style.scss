@@ -19,9 +19,13 @@
 	}
 }
 .el-table {
+	padding:1.5rem;
 	th{
 		// text-align:center;
 		background:#eee;
+	}
+	.cell{
+		line-height: 2rem;
 	}
 }
 .el-dialog__header{

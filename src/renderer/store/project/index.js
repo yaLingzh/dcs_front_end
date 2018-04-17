@@ -17,6 +17,7 @@ export default function () {
      * 登录相关状态
      */
     session,
+    selectPointList:[],
   }
 
   return {

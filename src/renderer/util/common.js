@@ -66,6 +66,11 @@ export function appInitInject(store, router) {
 
 export function registerFilters() {
   Vue.use(vueFilter)
+  Vue.filter('log', (data) => {
+    console.log(JSON.parse(JSON.stringify(data)))
+    return ''
+  })
+
 }
 
 
@@ -129,6 +134,34 @@ export function getStorageDataAndDecode(key, value) {
   }
   return null
 }
+
+/*设置cookie*/
+export function setCookieEncode(key, value){
+  let oDate = new Date();
+  oDate.setDate(oDate.getDate());
+  document.cookie = key + '=' + b64EncodeUnicode(value) + ':expires=' + oDate;
+}
+
+/*删除cookie*/
+export function removeCookie(key){
+  setCookieEncode(key, '', -1); //Cookie保质期退回一天便可以删除
+}
+/*取cookie值 */
+export function getCookieDecode(key){
+  let cookieArr = document.cookie.split('=');
+  if(document.cookie != null){
+    for(let cookie of cookieArr){
+      if(cookie == key){
+        return b64DecodeUnicode(cookieArr[1])
+      }
+    }
+  }else{
+    return null
+  }
+
+}
+
+
 
 /**
  * 设置 token

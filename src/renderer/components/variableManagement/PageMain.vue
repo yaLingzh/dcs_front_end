@@ -4,14 +4,14 @@
   <div class="body-content">
     <el-row :gutter="0">
       <el-col :span="4">
-        <left-menu :variableMenuData="variablePointsGroupData" :activeName='liActiveName'></left-menu>
+        <left-menu :variablePointsGroup="variablePointsGroupData" :activeName='liActiveName'></left-menu>
       </el-col>
       <el-col :span="20">
         <div class="grid-content grid-bg-purple">
           <!-- <p class="grid-middle-title"><em class="el-icon-minus"></em></p> -->
           <el-tabs v-model="editVeriableTabsValue" type="card" closable @tab-remove="removeVaribleTab">
             <el-tab-pane
-              v-for="(item, index) in veraibleTabs"
+              v-for="(item, index) in $_.uniqWith(veraibleTabs, $_.isEqual)"
               :key="item.name"
               :label="item.title"
               :name="item.name"
@@ -47,13 +47,10 @@ export default {
   },
   created(){
     let vm = this;
-    vm.$bus.$on('checkedVariable', msg=>{
-      vm.variableMenuData = msg
-    })
     vm.$bus.$on('veraibleTabs', msg=>{
-      vm.veraibleTabs.push(msg);
-      vm.liActiveName = msg.sort
-      vm.editVeriableTabsValue = msg.newTabName;
+        vm.veraibleTabs.push(msg);
+        vm.liActiveName = msg.sort
+        vm.editVeriableTabsValue = msg.newTabName;
     })
    vm.initPointsGroup()
    vm.initPointList()

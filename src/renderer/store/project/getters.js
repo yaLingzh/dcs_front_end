@@ -44,5 +44,14 @@ getters[types.GETTERS.curProject] = state => {
   }
 }
 
+getters[types.GETTERS.variablePointeList] = state => {
+  return state.session.variablePointeList
+}
+//已经选择的 强制点
+getters[types.GETTERS.submittedPointeList] = state => {
+  return state.session.selectedPointeList
+}
+
+
 
 

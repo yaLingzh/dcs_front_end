@@ -1,8 +1,8 @@
 <template>
  <div class="grid-content grid-bg-purple-dark">
- 	<p class="left-menu-tree-title">变量列表 <em class class="el-icon-refresh"></em></p>
+ 	<p class="left-menu-tree-title">变量列表 <!-- <em class class="el-icon-refresh"></em> --></p>
    <ul class="let-var-menus">
- 	<li v-for="(varMenu, index) in variableMenuData" v-model="groupName" :class="{active: index == activeName}" @click="getCurrentMenu(varMenu , index)"><span>{{varMenu.group_name}}</span> <i class="el-icon-menus el-icon-arrow-right"></i></li>
+ 	<li v-for="(varMenu, index) in variablePointsGroup" v-model="groupName" :class="{active: index == activeName}" @click="getCurrentMenu(varMenu , index)"><span>{{varMenu.group_name}}</span> <i class="el-icon-menus el-icon-arrow-right"></i></li>
    </ul>
  </div>
 </template>
@@ -18,10 +18,9 @@
   			veraiblePointerDatas:null,
   		}
   	},
-  	props:['variableMenuData','activeName'],
+  	props:['variablePointsGroup','activeName'],
   	created(){
   		let vm = this
-
   		vm.veraiblePointerDatas = vm.getStorageDataAndDecode('variableListData')
   	},
     methods: {
@@ -39,7 +38,7 @@
 	        name: newTabName,
 	        content: vm.$_.flatten(pointerObj),
 	        newTabName: newTabName,
-	        sort: index
+	        sorts: index
 	      	}
        	vm.$bus.$emit('veraibleTabs', vm.veraibleTabs)
       },

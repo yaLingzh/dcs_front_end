@@ -17,14 +17,14 @@
               <p>取消当前组强制</p></a></dd>
               <dd><a href="javascript:;"><em class="iconfont icon-header-cancelall"></em>
               <p>取消所有强制</p></a></dd>
-              <dd><a @click="mandatory"><em class="iconfont icon-header-search"></em>
-              <p>搜索</p></a></dd>
+           <!--    <dd><a @click="mandatory"><em class="iconfont icon-header-search"></em>
+              <p>搜索</p></a></dd> -->
               <dd><a href="javascript:;"><em class="iconfont icon-header-edit"></em>
               <p>编辑组</p></a></dd>
               <dd><a href="javascript:;"><em class="iconfont icon-header-save"></em>
               <p>保存新组</p></a></dd>
-              <dd><a @click="mandatory"><em class="iconfont icon-header-all"></em>
-              <p>所有强制列表</p></a></dd>
+              <!-- <dd><a @click="mandatory"><em class="iconfont icon-header-all"></em>
+              <p>所有强制列表</p></a></dd> -->
               <!-- <dt>变量组管理</dt> -->
             </dl>
           </div>

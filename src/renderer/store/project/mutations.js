@@ -36,4 +36,21 @@ export default {
     saveSession(state.session)
   },
 
+  [types.MUTATIONS.setVariablePointListData] (state, pointe) {
+    state.session.variablePointeList = pointe
+    saveSession(state.session)
+  },
+
+  [types.MUTATIONS.setSubmittedPointeList] (state, selectedPointe) {
+    state.session.selectedPointeList = selectedPointe
+    saveSession(state.session)
+  },
+
+  // 选中的强制列表
+  // [types.MUTATIONS.setSubmittedPointeList] (state, selectedPointe) {
+  //   state.selectPointList = selectedPointe
+  //   state.session.selectedPointeList = selectedPointe
+  //   saveSession(state.session)
+  // }
+
 }

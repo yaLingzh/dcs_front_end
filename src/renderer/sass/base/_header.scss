@@ -16,6 +16,7 @@
 .header-top-name{
   @include height(auto, 3.4rem, 3.4rem);
   @extend %textAlign;
+  font-size:1.5rem;
   color:#fff;
 }
 .header-nav-first{

@@ -22,7 +22,8 @@
  </div>
 </template>
 <script>
-	// const cityOptions = ['上海', '北京', '广州', '深圳'];
+  import types from "../../store/project/types";
+  import {mapGetters} from "Vuex";
 	export default{
 		name:'showList',
 		data(){
@@ -30,21 +31,37 @@
         status:{
           dialogListVisible:false,
         },
-        checkVariableAll: false,
+        checkVariableAll: true,
         checkedVariable: [],
         isIndeterminate: false,
 				variableSettingData:null,
 			}
 		},
-		created(){},
+    computed:{
+      ...mapGetters({
+        // 当前已选子强制点
+        submittedPointeList: types.GETTERS.submittedPointeList,
+      }),
+    },
+		created(){
+      let vm = this
+      vm.checkedVariable = vm.submittedPointeList
+    },
 		mounted(){},
+
 		methods:{
       initVariableSettingData(){
         let vm = this,
-            url = '/point/cols'
+            url = '/point/column'
         vm.$axios.get(url).then(response=>{
           if(response.status == 200){
-            vm.variableSettingData = response.data.data
+            vm.variableSettingData = response.data.data.map(item=>{return item.display})
+            if(vm.submittedPointeList){
+              vm.checkedVariable = vm.submittedPointeList
+            }else{
+              vm.checkedVariable = vm.variableSettingData
+            }
+            vm.$store.commit(types.MUTATIONS.setVariablePointListData, response.data.data)
           }else{
             vm.$message.error('获取设置列表失败！')
           }
@@ -54,7 +71,7 @@
        handleCheckVariableAllChange(val) {
         let vm = this
         vm.checkedVariable = val ? vm.variableSettingData : [];
-        vm.isIndeterminate = true;
+        vm.isIndeterminate = false;
       },
       handleCheckedVariableChange(value) {
         let vm = this
@@ -71,7 +88,7 @@
       /*选中设置的列表值*/
       selectedVariableList(){
         let vm = this
-        vm.$bus.$emit('checkedVariable', vm.checkedVariable)
+        vm.$store.commit(types.MUTATIONS.setSubmittedPointeList, vm.checkedVariable)
         vm.status.dialogListVisible = false;
       },
 		},
@@ -81,9 +98,6 @@
        vm.$bus.$on('showList', (msg) => {
          vm.status.dialogListVisible = msg
        })
-    },
-    mounted(){
-      let vm = this
     },
 	}
 
