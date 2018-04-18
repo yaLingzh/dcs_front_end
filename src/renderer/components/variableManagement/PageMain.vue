@@ -11,7 +11,7 @@
           <!-- <p class="grid-middle-title"><em class="el-icon-minus"></em></p> -->
           <el-tabs v-model="editVeriableTabsValue" type="card" closable @tab-remove="removeVaribleTab">
             <el-tab-pane
-              v-for="(item, index) in $_.uniqWith(veraibleTabs, $_.isEqual)"
+              v-for="(item, index) in veraibleTabs"
               :key="item.name"
               :label="item.title"
               :name="item.name"
@@ -47,10 +47,27 @@ export default {
   },
   created(){
     let vm = this;
+    /**
+     * @Author      supper520love@126.com
+     * @DateTime    2018-04-18
+     * @description [tab页签数据及相关操作]
+     */
     vm.$bus.$on('veraibleTabs', msg=>{
-        vm.veraibleTabs.push(msg);
-        vm.liActiveName = msg.sort
+       if(!vm.$_.isEmpty(vm.veraibleTabs)){
+          let hasVer = vm.$_.find(vm.veraibleTabs, item=>{ return item.sorts == msg.sorts})
+          if(vm.$_.isEmpty(hasVer)){
+            vm.liActiveName = msg.sorts
+            vm.editVeriableTabsValue = msg.newTabName;
+            vm.veraibleTabs.push(msg);
+          }else{
+            vm.editVeriableTabsValue = hasVer.newTabName
+            vm.liActiveName = hasVer.sorts
+          }
+       }else{
+        vm.liActiveName = msg.sorts
         vm.editVeriableTabsValue = msg.newTabName;
+        vm.veraibleTabs.push(msg);
+       }
     })
    vm.initPointsGroup()
    vm.initPointList()
@@ -73,6 +90,12 @@ export default {
         vm.$message.error('获取变量组列表请求失败')
       })
     },
+    /**
+     * @Author      supper520love@126.com
+     * @DateTime    2018-04-18
+     * @description [获取变量列表]
+     * @return      {[Object]}              [获取变量列表数据]
+     */
     initPointList(){
       let vm = this
       let url = '/point'
@@ -87,6 +110,13 @@ export default {
         vm.$message.error('获取变量列表请求失败')
       })
     },
+    /**
+     * @Author      supper520love@126.com
+     * @DateTime    2018-04-18
+     * @description [删除当前组页面签]
+     * @param       {[String]}              targetName [当前组名]
+     * @return      {[Array]}                         [最新veraibleTabs]
+     */
       removeVaribleTab(targetName) {
         let vm = this
         let tabs = vm.veraibleTabs;
@@ -98,7 +128,7 @@ export default {
               let nextTab = tabs[index + 1] || tabs[index - 1];
               if (nextTab) {
                 activeName = nextTab.name;
-                currentLi = nextTab.sort;
+                currentLi = nextTab.sorts;
               }
             }
           });
@@ -107,10 +137,14 @@ export default {
           activeName = vm.editVeriableTabsValue;
           currentLi = vm.liActiveName;
         }
+
         vm.liActiveName = currentLi
         vm.editVeriableTabsValue = activeName;
-        
         vm.veraibleTabs = tabs.filter(tab => tab.name !== targetName);
+        if(vm.$_.isEmpty(vm.veraibleTabs)){
+          vm.$bus.$emit('resetCurrentPointPromit', false)
+          vm.$bus.$emit('isSavsePromit', false)
+        }
       }
   },
 
