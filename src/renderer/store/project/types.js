@@ -45,7 +45,15 @@ export default {
      * 提交选择的强制列表项
      */
     submittedPointeList: namespace + 'submittedPointeList',
-  
+    /**
+     * [isBuildGroupPointName 新建强制组名]
+     * @type {Boolean}
+     */
+    isBuildGroupPoint: namespace +　'isBuildGroupPoint',
+
+    getNewGroupPoint: namespace + 'getNewGroupPoint',
+
+
   },
   ACTIONS: {
     /**
@@ -61,5 +69,6 @@ export default {
     setToken: namespace + 'setToken',
     setVariablePointListData: namespace + 'setVariablePointListData',
     setSubmittedPointeList: namespace + 'setSubmittedPointeList',
+    setBuildGroupPointName: namespace + 'setBuildGroupPointName',
   }
 }

@@ -15,10 +15,33 @@
   			tabIndex: 0,
   			groupName:null,
   			activeLi:null,
+        variablePointsGroupDatas:null,
   			veraiblePointerDatas:null,
   		}
   	},
-  	props:['variablePointsGroup','activeName'],
+  	props:['variablePointsGroup','activeName','isRefreshMenu'],
+    // computed:{
+    //   variablePointsGroup(){
+    //     return this.variablePointsGroup
+    //   },
+    // },
+    watch:{
+     variablePointsGroup(curVal,oldVal){
+      let vm = this
+      if(curVal&&vm.isRefreshMenu==true){
+        vm.tabIndex = curVal.length - 1
+        vm.getCurrentMenu(curVal[vm.tabIndex], vm.tabIndex)
+        return curVal
+       }
+     },
+     // isRefreshMenu(curVal, oldVal){
+     //  let vm = this
+     //  if(curVal){
+     //    console.log(vm.tabIndex, 'left');
+          
+     //  }
+     // },
+    },
   	created(){
   		let vm = this
   		vm.veraiblePointerDatas = vm.getStorageDataAndDecode('variableListData')

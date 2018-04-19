@@ -4,7 +4,7 @@
   <div class="body-content">
     <el-row :gutter="0">
       <el-col :span="4">
-        <left-menu :variablePointsGroup="variablePointsGroupData" :activeName='liActiveName'></left-menu>
+        <left-menu :variablePointsGroup="variablePointsGroup" :isRefreshMenu="isRefreshMenu" :activeName='liActiveName'></left-menu>
       </el-col>
       <el-col :span="20">
         <div class="grid-content grid-bg-purple">
@@ -26,7 +26,7 @@
     </el-row>
   </div>
   <showList></showList>
-  <mandatory></mandatory>
+  <!-- <mandatory></mandatory> -->
 </div>
 </template>
 
@@ -40,13 +40,22 @@ export default {
      variableMenuData:null, //设置的变量值
      variablePointsGroupData:null, //变量组列表值
      variableListData:null, //变量列表
-      editVeriableTabsValue: '1',
-      veraibleTabs: [],
+    editVeriableTabsValue: '1',
+    veraibleTabs: [],
     liActiveName:null,
+    isRefreshMenu:false,
     }
   },
+  computed:{
+    variablePointsGroup(){
+      return this.variablePointsGroupData
+    }
+  },
+ 
   created(){
     let vm = this;
+    vm.initPointsGroup()
+    vm.initPointList()
     /**
      * @Author      supper520love@126.com
      * @DateTime    2018-04-18
@@ -69,9 +78,22 @@ export default {
         vm.veraibleTabs.push(msg);
        }
     })
-   vm.initPointsGroup()
-   vm.initPointList()
+
+     // let vm = this
+     /**
+     * @Author      supper520love@126.com
+     * @DateTime    2018-04-19
+     * @description [接收新建组内容]
+     * @param       {[string]}              msg [emit传输key]
+     * @return      {[boller]}                  [true/false]
+     */
+    vm.$bus.$on('newGroupDataSuccess', msg=>{
+      vm.isRefreshMenu = msg
+      vm.initPointsGroup()
+    })
+
   },
+  
 
   methods: {
     setStorageDataAndEncode,
@@ -155,7 +177,7 @@ export default {
     testRecord: resolve => require(['../record/testRecord.vue'], resolve),
     leftMenu: resolve => require(['../_common/leftMenu.vue'], resolve),
     showList: resolve => require(['./showList.vue'], resolve),
-    mandatory: resolve => require(['./mandatoryList.vue'], resolve),
+    // mandatory: resolve => require(['./mandatoryList.vue'], resolve),
     variableTable: resolve => require(['./variableTable.vue'], resolve),
   },
 }

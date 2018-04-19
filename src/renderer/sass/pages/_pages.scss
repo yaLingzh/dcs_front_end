@@ -148,10 +148,11 @@
  }
 
  .dcs-editor-force{
- 	height: 2rem;
+ 	height: 3rem;
  	@extend %absolute;
- 	top:0.5rem;
- 	let:-0.6rem;
+ 	top:50%;
+ 	letf:-1rem;
+ 	margin-top:-1.5rem;
  	z-index:2;
  }
  .dcs-text-force{
@@ -170,5 +171,31 @@
  	font-size:1.6rem;
  	i{
  		margin-right:2rem;
+ 	}
+ }
+
+ .dcs-input-style{
+ 	// position:absolute;
+ 	// top:50%;
+ 	width:80%;
+ 	@include height(true, 3rem, 3rem);
+ 	border:#dcdfe6 solid 1px;
+ 	padding-left:1rem;
+ 	border-radius:0.5rem;
+ }
+ .dcs-show-editor-tool{
+ 	.el-icon-edit{
+ 		display:none;
+ 	}
+ 	&:hover{
+ 		.el-icon-edit{
+	 		display:inline-block;
+	 	}
+ 	}
+ }
+ .dcs-has-val{
+ 	color:#ff0000;
+ 	.el-icon-edit{
+ 		color:#606266
  	}
  }

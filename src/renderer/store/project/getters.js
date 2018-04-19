@@ -52,6 +52,15 @@ getters[types.GETTERS.submittedPointeList] = state => {
   return state.session.selectedPointeList
 }
 
+//已经建强制组名称项目
+getters[types.GETTERS.getNewGroupPoint] = state => {
+  return state.session.newGroupPoint
+}
+getters[types.GETTERS.isBuildGroupPoint] = state => {
+  return state.session.newGroupPoint.isSuccess
+}
+
+
 
 
 

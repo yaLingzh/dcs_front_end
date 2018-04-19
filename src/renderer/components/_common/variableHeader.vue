@@ -14,9 +14,9 @@
               <dd class="header-nav-child-current"><a @click="showList"><em class="iconfont icon-header-showlist"></em>
               <p>显示列</p></a></dd>
               <dd  @click="resetCurrentGroutPoint"><a href="javascript:;"><em class="iconfont icon-header-cancelcurrent"></em>
-              <p>取消当前组强制</p></a></dd>
-              <dd><a href="javascript:;"><em class="iconfont icon-header-cancelall"></em>
-              <p>取消所有强制</p></a></dd>
+              <p>取消强制</p></a></dd>
+              <!-- <dd><a href="javascript:;"><em class="iconfont icon-header-cancelall"></em>
+              <p>取消所有强制</p></a></dd> -->
            <!--    <dd><a @click="mandatory"><em class="iconfont icon-header-search"></em>
               <p>搜索</p></a></dd> -->
               <!-- <dd><a href="javascript:;"><em class="iconfont icon-header-edit"></em>
@@ -40,14 +40,20 @@
       return {
         currentNav: 'variable',
         childNav:'',
-        isSavsePromit:false,
+        isNewBuildGroupPromit:false,
         resetCurrentPointPromit:false,
       }
     },
     created(){
       let vm = this
-      vm.$bus.$on('isSavsePromit', msg=>{
-        vm.isSavsePromit = msg
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-04-19
+       * @description [新建组及取消强制时是否已经打开了强制组]
+       * @return      {[booler]}                  [true/false]
+       */
+      vm.$bus.$on('isNewBuildGroupPromit', msg=>{
+        vm.isNewBuildGroupPromit = msg
       })
       vm.$bus.$on('resetCurrentPointPromit', msg=>{
         vm.resetCurrentPointPromit = msg
@@ -62,26 +68,36 @@
         let vm = this
         vm.$bus.$emit('mandatory', true);
       },
-
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-04-19
+       * @description [取消当前强制值]
+       */
       resetCurrentGroutPoint(){
         let vm = this
         if(vm.resetCurrentPointPromit){
           vm.$bus.$emit('resetCurrentGroutPoint', true)
         }else{
-          vm.$message.info('请打开一个强制组')
+          vm.$message.warning('请打开一个强制组')
           return
         }
       },
-
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-04-19
+       * @description [在现在强制组基础上新建一个强制]
+       * @return      {[Object]}              [新建组名，强制点]
+       */
       saveNewGroutPoint(){
         let vm = this
-        if(vm.isSavsePromit){
-          vm.$bus.$emit('saveNewGroutPoint', true)
+        if(vm.isNewBuildGroupPromit){
+          vm.$bus.$emit('newBuildGroutName', true)
         }else{
-          vm.$message.info('请打开一个强制组')
+          vm.$message.warning('请打开一个强制组')
           return
         }
       },
-    }
+    },
+    
   }
 </script>

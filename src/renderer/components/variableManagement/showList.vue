@@ -9,8 +9,9 @@
         <p> <el-checkbox :indeterminate="isIndeterminate" v-model="checkVariableAll" @change="handleCheckVariableAllChange">全选</el-checkbox></p>
         <!-- <div></div> -->
         <div class="variableListbox">
-          <el-checkbox-group v-model="checkedVariable" @change="handleCheckedVariableChange">
-            <el-checkbox v-for="variable in variableSettingData" :label="variable" :key="variable">{{variable}}</el-checkbox>
+          <el-checkbox-group v-model="checkedVariable"  @change="handleCheckedVariableChange">
+            <el-checkbox v-for="variable in variableSettingAllData" disabled v-if="variable.fixed" checked :label="variable.display" :key="variable.display">{{variable.display}}</el-checkbox>
+            <el-checkbox v-for="variable in variableSettingAllData" v-if="!variable.fixed" :label="variable.display" :key="variable.display">{{variable.display}}</el-checkbox>
           </el-checkbox-group>
         </div>
        </template>
@@ -25,7 +26,7 @@
   import types from "../../store/project/types";
   import {mapGetters} from "Vuex";
 	export default{
-		name:'showList',
+		name:'variableShowList',
 		data(){
 			return {
         status:{
@@ -35,6 +36,8 @@
         checkedVariable: [],
         isIndeterminate: false,
 				variableSettingData:null,
+        variableSettingAllData:null,
+        variableFixedData:null,
 			}
 		},
     computed:{
@@ -55,6 +58,8 @@
             url = '/point/column'
         vm.$axios.get(url).then(response=>{
           if(response.status == 200){
+            vm.variableSettingAllData = response.data.data
+            vm.variableFixedData = response.data.data.map(item=>{ if(item.fixed){ return item.display} })
             vm.variableSettingData = response.data.data.map(item=>{return item.display})
             if(vm.submittedPointeList){
               vm.checkedVariable = vm.submittedPointeList
@@ -70,11 +75,12 @@
 			/*选择*/
        handleCheckVariableAllChange(val) {
         let vm = this
-        vm.checkedVariable = val ? vm.variableSettingData : [];
+        vm.checkedVariable = val ? vm.variableSettingData : vm.$_.compact(vm.variableFixedData);
         vm.isIndeterminate = false;
       },
       handleCheckedVariableChange(value) {
         let vm = this
+
         let checkedCount = value.length;
         vm.checkVariableAll = checkedCount === vm.variableSettingData.length;
         vm.isIndeterminate = checkedCount > 0 && checkedCount < vm.variableSettingData.length;

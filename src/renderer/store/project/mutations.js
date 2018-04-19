@@ -46,11 +46,10 @@ export default {
     saveSession(state.session)
   },
 
-  // 选中的强制列表
-  // [types.MUTATIONS.setSubmittedPointeList] (state, selectedPointe) {
-  //   state.selectPointList = selectedPointe
-  //   state.session.selectedPointeList = selectedPointe
-  //   saveSession(state.session)
-  // }
+  // 新建强制组名成功
+  [types.MUTATIONS.setBuildGroupPointName] (state, groupData) {
+    state.session.newGroupPoint = groupData
+    saveSession(state.session)
+  }
 
 }
