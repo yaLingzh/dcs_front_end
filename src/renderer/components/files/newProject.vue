@@ -7,19 +7,27 @@
 		  width="30%"
 		  >
 		  <div class="pt30 ovh">
-		  	<el-table :border="true" :data="historyProjectData" v-if="historyProjectData&&!status.newBuildPro">
-				    <el-table-column property="name" label="名称"></el-table-column>
-			      <el-table-column
-			        fixed="right"
-			        label="操作"
-			        width="200"
-			        >
-			        <template slot-scope="scope">
-			          <el-button size="small" @click="openProClick(scope.row)">打开</el-button>
-			          <el-button  @click="newBuildPro" size="small">新建</el-button>
-			        </template>
-			      </el-table-column>
-				</el-table>
+		  	 <el-table
+		  	  v-if="!status.newBuildPro&&historyProjectData"
+			    :data="historyProjectData"
+			    border
+			    style="width: 100%">
+			    <el-table-column
+			      prop="name"
+			      label="名称"
+			      width="120">
+			    </el-table-column>
+			    <el-table-column
+			      fixed="right"
+			      label="操作"
+			      width="120">
+			      <template slot-scope="scope">
+			        <el-button  @click="openProClick(scope.row)" type="text" size="small">查看</el-button>
+			        <el-button type="text" size="small"  @click="newBuildPro">新建</el-button>
+			      </template>
+			    </el-table-column>
+			  </el-table>
+
 		  	<el-form v-if="status.newBuildPro" :model="projectForm" status-icon :rules="rulesFrom" ref="projectForm" label-width="120px" class="demo-ruleForm">
 				  <el-form-item label="请输入工程名" prop="name">
 				    <el-input type="text" v-model="projectForm.name" placeholder="请输入项目名称"></el-input>
@@ -45,7 +53,7 @@
  import types from '../../store/project/types'
  import {mapGetters } from 'vuex';
  import {remote} from 'electron'
- import  fs from 'fs'
+ // import  fs from 'fs'
  export default{
  	name:'engineering',
  	data(){
@@ -67,6 +75,7 @@
  			status:{
  				dialogVisibleProject: false,
  				newBuildPro:false,
+ 				historyProjectData:null,
  			},
  			title:'工程列表',
 			projectForm: {
@@ -83,9 +92,11 @@
         }
  		}
  	},
- 	props:['historyProjectData'],
+ 	// props:['historyProjectData'],
  	created(){
  		let vm = this
+ 		 vm.historyProjectData = JSON.parse(localStorage.getItem('historyProject'))
+ 		 console.log(vm.historyProjectData);
  		vm.$bus.$on('historyprojectbox', (msg) => {
       vm.status.dialogVisibleProject = msg
     })
@@ -165,7 +176,7 @@
  					vm.$axios.post(url, {params}).then(response=>{
  						if(response.status == 200){
  							let datas =  response.data
- 							console.log(datas, 'datas');
+ 							// console.log(datas, 'datas');
  							vm.$bus.$emit('mainpageshowbox', true)
  							vm.$store.commit(types.MUTATIONS.setCurProjectDatas, datas)
 		 					vm.$store.commit(types.MUTATIONS.setTokenData, datas.token)

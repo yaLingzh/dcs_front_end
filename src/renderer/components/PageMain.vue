@@ -4,25 +4,15 @@
   <div class="body-content" v-if="status.isShowTemplate">
     <el-row :gutter="0" >
       <el-col :span="4">
-        <left-tree ></left-tree>
+        <left-menu ></left-menu>
       </el-col>
-      <el-col :span="15">
-        <div class="grid-content grid-bg-purple">
-          <p class="grid-middle-title"><em class="el-icon-minus"></em></p>
-          <div class="grid-middle-content">内容</div>
-       </div>
-       <test-record></test-record>
-       <div class="grid-content grid-bg-purple">
-         <record ></record>
-       </div>
-    </el-col>
-      <el-col :span="5">
-        <div class="grid-content grid-bg-purple-light" >
-          <p class="grid-middle-title">趋势<em class="el-icon-minus"></em></p>
-          <div class="grid-side-content">
-            <trend></trend>
+      <el-col :span="20">
+        <div class="grid-content grid-bg-purple" >
+          <p class="grid-middle-title"><!-- <em class="el-icon-minus"></em> --></p>
+          <div class="grid-middle-content">
+            <current-pro-data-mess></current-pro-data-mess>
           </div>
-        </div>
+       </div>
     </el-col>
     </el-row>
   </div>
@@ -74,7 +64,7 @@ export default {
   },
   mounted(){
     let vm = this
-    vm.historyProjectData = JSON.parse(localStorage.getItem('historyProject'))
+   
     if(!vm.$_.isEmpty(vm.vxGlobal_curProject)&&vm.vxGlobal_isLogged){
       vm.status.isShowTemplate = true
     }
@@ -91,7 +81,7 @@ export default {
     topHeader: resolve => require(['./_common/header.vue'], resolve),
     record: resolve => require(['./record/record.vue'], resolve),
     testRecord: resolve => require(['./record/testRecord.vue'], resolve),
-    leftTree: resolve => require(['./_common/treeOne.vue'], resolve),
+    leftMenu: resolve => require(['./_common/leftMenuMain.vue'], resolve),
     newProject: resolve => require(['./files/newProject.vue'], resolve),
     addGroup: resolve => require(['./files/addGroup.vue'], resolve), // 新建用例组
     netWorkSet: resolve => require(['./configure/netWorkSet.vue'], resolve), // 网络环境配置
@@ -113,6 +103,7 @@ export default {
     userManage: resolve => require(['./account/userManage.vue'], resolve), //用户管理
     userGroupManage: resolve => require(['./account/userGroupManage.vue'], resolve), //用户组管理
     authorized: resolve => require(['./account/authorized.vue'], resolve), //日志
+    currentProDataMess: resolve => require(['./files/currentProDataInfo.vue'], resolve), //日志
 
   },
 }

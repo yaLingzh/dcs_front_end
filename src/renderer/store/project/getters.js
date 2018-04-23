@@ -44,6 +44,13 @@ getters[types.GETTERS.curProject] = state => {
   }
 }
 
+getters[types.GETTERS.curProjectDcs] = state => {
+  let proDatas = state.session.projectCurDatas
+  if(proDatas){
+    return proDatas
+  }
+}
+
 getters[types.GETTERS.variablePointeList] = state => {
   return state.session.variablePointeList
 }

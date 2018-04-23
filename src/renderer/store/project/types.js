@@ -37,6 +37,11 @@ export default {
      * @type {[Objtc]}
      */
     curProject: namespace + 'curProject',
+
+    /**
+     * 已经打开项目的规程
+     */
+    curProjectDcs: namespace + 'curProjectDcs',
     /**
      * 当前选择的强制列表项
      */

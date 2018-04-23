@@ -37,9 +37,11 @@
 		          <p>初始化导入</p></a></dd>
 		          <dd><a href="javascript:;">
 		          	<el-upload
-		          	  action=""
+		          	  action="http://10.144.238.103:8080/api/v1/procedure/upload"
 								  class="upload-demo"
+								  :limit="1"
 								  :show-file-list="false"
+								  :on-success="uploadSuccess"
 								  >
 								  <em class="iconfont icon-header-add"></em>
 		          <p>导入</p>
@@ -147,9 +149,15 @@
     ...mapGetters({
         vxGlobal_curProject: types.GETTERS.curProject,
         vxGlobal_isLogged: types.GETTERS.isLogged,
+        vxGlobal_token: types.GETTERS.token,
       }),
   },
  	methods:{
+ 		uploadSuccess(response, file, fileList){
+ 			let vm = this
+ 			console.log(response, 'response');
+ 			vm.$message.success('导入成功')
+ 		},
  		newProject(){
  			let vm = this
  			vm.$bus.$emit('newProject',true);

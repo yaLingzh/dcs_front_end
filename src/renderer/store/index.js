@@ -11,8 +11,8 @@ const debug = process.env.NODE_ENV !== 'production'
 const state = {}
 export default new Vuex.Store({
   state,
-  node_modules,
   modules: {
+  	node_modules,
     [constants.STORE__GLOBAL]: project(),
     // modules
   },

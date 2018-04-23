@@ -13,7 +13,7 @@
 	    </el-option>
 	  </el-select>
 	  <el-input style="width:15%" v-model="filter.columVal" class="m-r-15" placeholder="请输入内容"></el-input>
-	  <el-select v-model="filter.assocs" style="width: 5%" class="m-r-15" placeholder="请选择">
+	  <el-select v-model="filter.assocs" style="width: 6%" class="m-r-15" placeholder="请选择">
 	    <el-option
 	      v-for="item in assocs"
 	      :key="item.value"
@@ -51,7 +51,7 @@
         :key="head.name"
         type="index"
         >
-        <template slot-scope="scope" v-loading="loading">
+        <template slot-scope="scope" v-loading="dataLoading">
         	<p class="dcs-text-force">{{getForceVal(scope.row.point_name)}} <i class="el-icon-edit m-l-30" @click="isEditorClick(scope.row.point_name)"></i></p>
         	<p v-if="isEditor&&currentPointName == scope.row.point_name" class="dcs-editor-force">
         		<el-form :model="forceForm" :rules="rules" ref="forceForm">
@@ -94,7 +94,7 @@
  	name:'variablePointTable',
  	data(){
  		return {
- 			loading:false,
+ 			dataLoading:false,
  			theaderDatas:null,
  			isShowHead:false,
  			scopeRowVal:null,
@@ -360,18 +360,18 @@
  			let url = '/point/force'
  			vm.forceForm.forceVal = document.getElementById(e.target.id).value
  			vm.forceParams[vm.currentPointName] = vm.forceForm.forceVal
-		  vm.loading = true
+		  vm.dataLoading = true
       vm.$axios.post(url, vm.forceParams).then(response=>{
  				if(response.status == 200){
  					vm.isEditorTxt = false
  					vm.isEditor = false
- 					vm.loading=false
+ 					vm.dataLoading=false
  				}else{
- 					vm.loading=false
+ 					vm.dataLoading=false
  					vm.$message.error('设置强制值失败！')
  				}
  			}).catch(response=>{
- 				vm.loading = false
+ 				vm.dataLoading = false
  				vm.$message.error('设置强制值请求失败！')
  			})
  		},
@@ -411,3 +411,8 @@
 
  }
 </script>
+<style scope="sass">
+.el-table{
+	padding: 1.5rem;
+}
+</style>

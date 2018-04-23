@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "author": "zhangyaling <supper520love@126.com>",
   "description": "An electron-vue project",
-  "license": null,
+  "license": "v1",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
@@ -20,8 +20,8 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "dcs_front_end",
-    "appId": "org.simulatedgreg.electron-vue",
+    "productName": "dcsapp",
+    "appId": "org.simulatedgreg.dcs",
     "directories": {
       "output": "build"
     },
@@ -58,7 +58,8 @@
     "decamelize": "^2.0.0",
     "echarts": "^4.0.4",
     "element-ui": "^2.3.2",
-    "ladash": "^1.2.0",
+    "is-buffer": "^2.0.2",
+    "lodash": "^4.17.5",
     "request": "^2.85.0",
     "store": "^2.0.12",
     "vue": "^2.3.3",
@@ -100,7 +101,6 @@
     "karma-sourcemap-loader": "^0.3.7",
     "karma-spec-reporter": "^0.0.31",
     "karma-webpack": "^2.0.1",
-    "lodash": "^4.17.5",
     "mocha": "^3.0.2",
     "multispinner": "^0.2.1",
     "node-loader": "^0.6.0",
@@ -114,7 +114,7 @@
     "vue-loader": "^13.0.5",
     "vue-style-loader": "^3.0.1",
     "vue-template-compiler": "^2.4.2",
-    "vuex-router-sync": "^5.0.0",
+    "vuex-router-sync": "3.0.0",
     "webpack": "^3.5.2",
     "webpack-dev-server": "^2.7.1",
     "webpack-hot-middleware": "^2.18.2",

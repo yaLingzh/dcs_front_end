@@ -176,7 +176,7 @@ export default {
     record: resolve => require(['../record/record.vue'], resolve),
     testRecord: resolve => require(['../record/testRecord.vue'], resolve),
     leftMenu: resolve => require(['./letMenu.vue'], resolve),
-    showList: resolve => require(['./showList.vue'], resolve),
+    showList: resolve => require(['./showPointList.vue'], resolve),
     // mandatory: resolve => require(['./mandatoryList.vue'], resolve),
     variableTable: resolve => require(['./variableTable.vue'], resolve),
   },
