@@ -175,7 +175,7 @@ export default {
     trend: resolve => require(['../trend/trend.vue'], resolve),
     record: resolve => require(['../record/record.vue'], resolve),
     testRecord: resolve => require(['../record/testRecord.vue'], resolve),
-    leftMenu: resolve => require(['../_common/leftMenu.vue'], resolve),
+    leftMenu: resolve => require(['./letMenu.vue'], resolve),
     showList: resolve => require(['./showList.vue'], resolve),
     // mandatory: resolve => require(['./mandatoryList.vue'], resolve),
     variableTable: resolve => require(['./variableTable.vue'], resolve),
