@@ -5,7 +5,7 @@ import * as constants from './constants'
 import * as axios from 'axios'
 import {sync} from 'vuex-router-sync'
 import vueFilter from 'vue-filter'
-// import types from '../store/global/types'
+import types from '../store/project/types'
 import Bus from './bus.js';
 /**
  * app初始化，注入一些插件，vue原型属性和方法
@@ -175,7 +175,7 @@ export function getAuthorizationTokenHeaderValue(token) {
   return 'JWT ' + token
 }
 
-function _historyProject(){
+export function _historyProject(){
   let vm = this
   let url = 'project/history'
   axios.get(url).then(response=>{
@@ -188,6 +188,21 @@ function _historyProject(){
     }
   }).catch(response=>{
     console.log(response);
+  })
+}
+
+export function _initCurrentOpenPro(){
+  let vm = this
+  let url = 'project'
+  axios.get(url).then(response=>{
+    if(response.status == 200){
+      let datas = response.data
+      store.commit(types.MUTATIONS.setCurProjectDatas, datas)
+    }else{
+      vm.$message.error('获取当前打开工程信息失败！')
+    }
+  }).catch(response=>{
+    console.log(response.data);
   })
 }
 

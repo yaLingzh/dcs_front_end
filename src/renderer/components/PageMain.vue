@@ -51,7 +51,7 @@ export default {
      status:{
       isShowTemplate:false
      },
-     curProject:null,
+     // curProject:null,
     }
   },
   computed:{

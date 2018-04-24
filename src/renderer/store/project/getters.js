@@ -31,6 +31,13 @@ getters[types.GETTERS.isRoleSelected] = (state, getters) => {
   return !!role
 }
 
+/**
+ * @Author      supper520love@126.com
+ * @DateTime    2018-04-24
+ * @description [选中项目名称，路径]
+ * @param       {[type]}              state [description]
+ * @return      {[type]}                    [description]
+ */
 getters[types.GETTERS.curProject] = state => {
   let proDatas = state.session.projectCurDatas
   if(proDatas) {
@@ -44,6 +51,13 @@ getters[types.GETTERS.curProject] = state => {
   }
 }
 
+/**
+ * @Author      supper520love@126.com
+ * @DateTime    2018-04-24
+ * @description [当前打开的规程]
+ * @param       {[type]}              state [description]
+ * @return      {[type]}                    [description]
+ */
 getters[types.GETTERS.curProjectDcs] = state => {
   let proDatas = state.session.projectCurDatas
   if(proDatas){
@@ -60,9 +74,9 @@ getters[types.GETTERS.submittedPointeList] = state => {
 }
 
 //已经建强制组名称项目
-// getters[types.GETTERS.getNewGroupPoint] = state => {
-//   return state.session.newGroupPoint
-// }
+getters[types.GETTERS.getNewGroupPoint] = state => {
+  return state.session.newGroupPoint
+}
 // getters[types.GETTERS.isBuildGroupPoint] = state => {
 //   return state.session.newGroupPoint.isSuccess
 // }

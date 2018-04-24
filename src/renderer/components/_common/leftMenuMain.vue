@@ -3,10 +3,11 @@
   	<div class="grid-content grid-bg-purple-dark">
       <p class="left-menu-tree-title">项目资源 <!-- <em class class="el-icon-minus"></em> --></p>
       <p class="left-menu-tree-tool">
-        <!-- <em class="iconfont icon-menu-see"></em><em class="iconfont icon-menu-break"></em> -->
+        <!-- <em class="iconfont icon-menu-see"></em> -->
          <el-input placeholder="请输入内容" auto-complete="on" v-model="filterText" size="mini" class="input-with-select">
           <el-button slot="append" size="mini" icon="el-icon-search"></el-button>
         </el-input>
+        <em class="iconfont icon-menu-break" style="margin-left:2rem" @click="_initCurrentOpenPro"></em>
       </p>
       <div class="grid-left-content">
         <el-tree
@@ -18,7 +19,6 @@
           @node-click="getCurrentNodeData"
           ref="treeProDatas">
         </el-tree>
-      
       </div>
 
     </div>
@@ -27,6 +27,7 @@
 <script>
   import types from '../../store/project/types'
   import {mapGetters } from 'vuex';
+  import {_initCurrentOpenPro} from "../../util/common";
 	export default{
 		name:'tree',
 		data(){
@@ -57,6 +58,7 @@
     },
 
     methods: {
+      _initCurrentOpenPro,
       initMenuTreeDatas(){
         let vm = this
         let treeDatas = {}

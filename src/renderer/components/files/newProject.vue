@@ -76,7 +76,7 @@
  			status:{
  				dialogVisibleProject: false,
  				newBuildPro:false,
- 				// historyProjectData:null,
+ 				isDaoRuSuccess:null,
  			},
  			title:'工程列表',
 			projectForm: {
@@ -96,10 +96,14 @@
  	props:['historyProjectData'],
  	created(){
  		let vm = this
- 		 // vm.historyProjectData = vm.getStorageDataAndDecode('historyProject') // JSON.parse(localStorage.getItem('historyProject'))
- 		 console.log(vm.historyProjectData);
+ 		if(!vm.vxGlobal_curProject){
+ 			vm.status.dialogVisibleProject = true
+ 		}
  		vm.$bus.$on('historyprojectbox', (msg) => {
       vm.status.dialogVisibleProject = msg
+    })
+    vm.$bus.$on('daorusuccess', msg=>{
+    	vm.status.isDaoRuSuccess = msg
     })
  	},
  	computed:{
@@ -107,9 +111,9 @@
         vxGlobal_curProject: types.GETTERS.curProject,
         vxGlobal_roles: types.GETTERS.roles,
       }),
-
   },
  	mounted(){
+ 		let vm = this
  		
  	},
  	methods:{

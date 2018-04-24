@@ -134,6 +134,7 @@
 <script>
  import types from "../../store/project/types";
  import {mapGetters } from "vuex";
+ import {_initCurrentOpenPro} from "../../util/common";
  export default{
  	name:'headerNav',
  	data(){
@@ -153,11 +154,13 @@
       }),
   },
  	methods:{
+ 		_initCurrentOpenPro,
  		uploadSuccess(response, file, fileList){
  			let vm = this
- 			console.log(response, 'response');
+ 			vm._initCurrentOpenPro()
  			vm.$message.success('导入成功')
  		},
+ 		
  		newProject(){
  			let vm = this
  			vm.$bus.$emit('newProject',true);
