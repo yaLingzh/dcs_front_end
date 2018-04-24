@@ -10,7 +10,7 @@
         <!-- <div></div> -->
         <div class="variableListbox">
           <el-checkbox-group v-model="checkedVariable"  @change="handleCheckedVariableChange">
-            <el-checkbox v-for="variable in variableSettingAllData" disabled v-if="variable.fixed" checked :label="variable.display" :key="variable.display">{{variable.display}}</el-checkbox>
+            <el-checkbox v-for="variable in variableSettingAllData" disabled v-if="variable.fixed" :label="variable.display" :key="variable.display">{{variable.display}}</el-checkbox>
             <el-checkbox v-for="variable in variableSettingAllData" v-if="!variable.fixed" :label="variable.display" :key="variable.display">{{variable.display}}</el-checkbox>
           </el-checkbox-group>
         </div>
@@ -48,7 +48,9 @@
     },
 		created(){
       let vm = this
-      vm.checkedVariable = vm.submittedPointeList
+      if(vm.submittedPointeList){
+        vm.checkedVariable = vm.submittedPointeList
+      }
       vm.initVariableSettingData();
        vm.$bus.$on('showList', (msg) => {
          vm.status.dialogPointListVisible = msg
@@ -64,11 +66,7 @@
             vm.variableSettingAllData = response.data.data
             vm.variableFixedData = response.data.data.map(item=>{ if(item.fixed){ return item.display} })
             vm.variableSettingData = response.data.data.map(item=>{return item.display})
-            if(vm.submittedPointeList){
-              vm.checkedVariable = vm.submittedPointeList
-            }else{
-              vm.checkedVariable = vm.variableSettingData
-            }
+           
             vm.$store.commit(types.MUTATIONS.setVariablePointListData, response.data.data)
           }else{
             vm.$message.error('获取设置列表失败！')
@@ -83,7 +81,6 @@
       },
       handleCheckedVariableChange(value) {
         let vm = this
-
         let checkedCount = value.length;
         vm.checkVariableAll = checkedCount === vm.variableSettingData.length;
         vm.isIndeterminate = checkedCount > 0 && checkedCount < vm.variableSettingData.length;

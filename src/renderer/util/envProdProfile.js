@@ -24,19 +24,12 @@ export const ENV_PROD_PROFILE = process.env.ENV_PROD_PROFILE
 
 export const PROD_CONFIGS = {
   [ENV_PROD_PROFILE_PROD]: {
-    authApiBaseUrl: 'http://center.hub.nercel.com/',// 认证中心
-    apiBaseUrl: 'http://center.hub.nercel.com/api/v1/',// 基础api
-    clientId: 'B3hCzu7LNdiKU8H7wsANqH',//暂未修改，为正式版的clientId
-  },
-  [ENV_PROD_PROFILE_TEST]: {
-    authApiBaseUrl: 'http://119.97.166.135:2030',//'http://119.97.166.135:2030/',// 认证中心
-    apiBaseUrl: 'http://119.97.166.135:2030/api/v1',// 基础api /api/v1/
-    clientId: 'fsnGUa9KWtS6eEPR6RjWHV',
+    authApiBaseUrl: 'http://10.144.238.103:8080/',// 认证中心
+    apiBaseUrl: 'http://10.144.238.103:8080/api/v1/',// 基础api
   },
   [ENV_PROD_PROFILE_TEXT_DEV]: {
     authApiBaseUrl: 'http://10.144.238.103:8080/',// 认证中心
     apiBaseUrl: 'http://10.144.238.103:8080/api/v1/',// 基础api /api/v1/
-    clientId: '6ybk6vpYzkSYPcYfXwq8Km',
   },
 }[ENV_PROD_PROFILE]
 

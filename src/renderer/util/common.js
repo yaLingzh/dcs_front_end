@@ -181,7 +181,8 @@ function _historyProject(){
   axios.get(url).then(response=>{
     if(response.status == 200){
       let historyProjectData = response.data.data
-      localStorage.setItem('historyProject', JSON.stringify(historyProjectData))
+      setStorageDataAndEncode('historyProject',historyProjectData)
+      // localStorage.setItem('historyProject', JSON.stringify(historyProjectData))
     }else{
       vm.$message.error('没有历史项目数据')
     }

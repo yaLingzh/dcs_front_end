@@ -43,7 +43,7 @@
 		  </div>
 		  <span slot="footer" class="dialog-footer" v-if="status.newBuildPro">
 		  	<el-button v-if="status.newBuildPro" @click="status.newBuildPro = false, title='工程列表'">返回</el-button>
-		    <el-button @click="status.dialogVisibleProject = false">取 消</el-button>
+		    <!-- <el-button @click="status.dialogVisibleProject = false">取 消</el-button> -->
 		    <el-button type="primary" @click="submitForm('projectForm')">保存</el-button>
 		  </span>
 		</el-dialog>
@@ -53,6 +53,7 @@
  import types from '../../store/project/types'
  import {mapGetters } from 'vuex';
  import {remote} from 'electron'
+ import {getStorageDataAndDecode} from "../../util/common"
  // import  fs from 'fs'
  export default{
  	name:'engineering',
@@ -75,7 +76,7 @@
  			status:{
  				dialogVisibleProject: false,
  				newBuildPro:false,
- 				historyProjectData:null,
+ 				// historyProjectData:null,
  			},
  			title:'工程列表',
 			projectForm: {
@@ -92,10 +93,10 @@
         }
  		}
  	},
- 	// props:['historyProjectData'],
+ 	props:['historyProjectData'],
  	created(){
  		let vm = this
- 		 vm.historyProjectData = JSON.parse(localStorage.getItem('historyProject'))
+ 		 // vm.historyProjectData = vm.getStorageDataAndDecode('historyProject') // JSON.parse(localStorage.getItem('historyProject'))
  		 console.log(vm.historyProjectData);
  		vm.$bus.$on('historyprojectbox', (msg) => {
       vm.status.dialogVisibleProject = msg
@@ -106,11 +107,13 @@
         vxGlobal_curProject: types.GETTERS.curProject,
         vxGlobal_roles: types.GETTERS.roles,
       }),
+
   },
  	mounted(){
  		
  	},
  	methods:{
+ 		getStorageDataAndDecode,
  		newBuildPro(){
  			let vm = this
  			vm.status.newBuildPro = true

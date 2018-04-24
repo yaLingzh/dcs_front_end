@@ -307,8 +307,6 @@
  				return vm.$_.flatten(vm.submittedPointeList.map(item =>{
  					 return vm.$_.filter(obj, ls =>{ return ls.display == item })
  				}))
- 			}else{
- 				return
  			}
  		},
  		/**

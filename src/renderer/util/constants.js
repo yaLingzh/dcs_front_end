@@ -35,15 +35,15 @@ export const API_BASE_URL_DEV = 'http://10.144.238.103:8080/api/v1/'
  * @version  获取对应环境 api url
  * @return   {[string]}
  */
-function getApiBaseUrl() {
-  return process.env.API_BASE_URL || (
-      IS_ENV_PROD ? PROD_CONFIGS.apiBaseUrl : (
-        // 开发模式优先从localStorage中取
-        localStorage.getItem(LOCAL_STORAGE__BASE_API) || API_BASE_URL_DEV
-      ))
-}
+// function getApiBaseUrl() {
+//   return process.env.API_BASE_URL || (
+//       IS_ENV_PROD ? PROD_CONFIGS.apiBaseUrl : (
+//         // 开发模式优先从localStorage中取
+//         localStorage.getItem(LOCAL_STORAGE__BASE_API) || API_BASE_URL_DEV
+//       ))
+// }
 
 // 优先从启动参数中获取 api uri
-export const API_BASE_URL = getApiBaseUrl()
+export const API_BASE_URL = localStorage.getItem(LOCAL_STORAGE__BASE_API) || API_BASE_URL_DEV
 // export const AUTH_API_BASE_URL = IS_ENV_PROD ? PROD_CONFIGS.authApiBaseUrl : 'http://122.204.161.218:8005/'
 // export const AUTH_CLIENT_ID = IS_ENV_PROD ? PROD_CONFIGS.clientId : '2AM6D9dG7kbygWmAC8aDmH'

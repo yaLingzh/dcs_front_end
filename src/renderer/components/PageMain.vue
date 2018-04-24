@@ -41,6 +41,7 @@
 <script>
 import types from "../store/project/types";
 import {mapGetters } from "vuex";
+import {getStorageDataAndDecode} from "../util/common";
 export default {
   name: 'dcs_index',
   data () {
@@ -58,13 +59,13 @@ export default {
         vxGlobal_curProject: types.GETTERS.curProject,
         vxGlobal_isLogged: types.GETTERS.isLogged,
       }),
+   
   },
   methods: {
-
+    getStorageDataAndDecode,
   },
   mounted(){
     let vm = this
-   
     if(!vm.$_.isEmpty(vm.vxGlobal_curProject)&&vm.vxGlobal_isLogged){
       vm.status.isShowTemplate = true
     }
@@ -74,6 +75,7 @@ export default {
   },
   created(){
     let vm = this
+    vm.historyProjectData = vm.getStorageDataAndDecode('historyProject')
   },
   components:{
     login: resolve => require(['./login/login.vue'], resolve),

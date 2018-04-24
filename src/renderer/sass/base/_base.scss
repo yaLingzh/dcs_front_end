@@ -95,11 +95,11 @@ h1, h2, h3, h4, h4, h6 {
 }
 @font-face {
   font-family: 'iconfont';  /* project id 595299 */
-  src: url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.eot');
-  src: url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.eot?#iefix') format('embedded-opentype'),
-  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.woff') format('woff'),
-  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.ttf') format('truetype'),
-  url('//at.alicdn.com/t/font_595299_bzgqppdfcdptx1or.svg#iconfont') format('svg');
+  src: url('./font/iconfont.eot');
+  src: url('./font/iconfont.eot?#iefix') format('embedded-opentype'),
+  url('./font/iconfont.woff') format('woff'),
+  url('./font/iconfont.ttf') format('truetype'),
+  url('./font/iconfont.svg#iconfont') format('svg');
 }
 @font-face{
 　　font-family: "weiYaHei";

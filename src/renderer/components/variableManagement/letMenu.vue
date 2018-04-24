@@ -53,7 +53,7 @@
         let newTabName = ++ vm.tabIndex + '';
         let pointerObj = []
         vm.$_.forEach(val.points, item=>{
-        	pointerObj.push(vm.veraiblePointerDatas.filter(items=>{ return items.point_name == item}))
+        	pointerObj.push(vm.$_.filter(vm.veraiblePointerDatas, items=>{ return items.point_name == item}))
         })
         vm.activeLi = index
        	vm.veraibleTabs={

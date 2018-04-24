@@ -24,9 +24,9 @@ const winURL = process.env.NODE_ENV === 'development'
 
 function createWindow () {
   // Open the DevTools.
- if(process.env.NODE_ENV === 'development'){
+ // if(process.env.NODE_ENV === 'development'){}
   BrowserWindow.addDevToolsExtension("C:/Users/Aimee/AppData/Local/Google/Chrome/User Data/Profile 2/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/4.1.4_0")
-  }
+  
   /**
    * Initial window options
    */
@@ -42,7 +42,8 @@ function createWindow () {
   })
 
   mainWindow.loadURL(winURL)
-  
+  // 打开窗口的调试工具
+  mainWindow.webContents.openDevTools();
   //前期为了调试方面，默认打开控制台
   // mainWindow.webContents.openDevTools({ detach: true });
 
