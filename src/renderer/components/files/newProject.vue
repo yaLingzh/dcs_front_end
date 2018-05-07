@@ -78,6 +78,7 @@
  				newBuildPro:false,
  				isDaoRuSuccess:null,
  			},
+ 			historyProjectData:null,
  			title:'工程列表',
 			projectForm: {
 				name:'',
@@ -93,9 +94,11 @@
         }
  		}
  	},
- 	props:['historyProjectData'],
+ 	// props:['historyProjectData'],
  	created(){
  		let vm = this
+ 		vm.historyProjectData = vm.getStorageDataAndDecode('historyProject')
+ 		console.log(vm.historyProjectData);
  		if(!vm.vxGlobal_curProject){
  			vm.status.dialogVisibleProject = true
  		}

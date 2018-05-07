@@ -18,6 +18,7 @@ export default function () {
      */
     session,
     selectPointList:[],
+    currentProjectData:{},
   }
 
   return {

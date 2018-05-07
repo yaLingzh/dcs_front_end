@@ -2,43 +2,41 @@
  <div>
  	<el-dialog title="新建用例组" width="57%" :visible.sync="dialogGroupVisible">
  		<div class="grid-middle-content test-record-content">
-       <el-form ref="form" :inline="true" :model="dataFrom" class="demo-form-inline">
+       <el-form ref="addGroupForm" :inline="true" :rules="addGroupRules" :model="dataFrom" class="demo-form-inline">
         <el-form-item label="用例组名称">
           <el-input v-model="dataFrom.groupName" size="50"></el-input>
         </el-form-item>
         <el-form-item>
           【提示：用例组可上下拖拽调整顺序！】
         </el-form-item>
-        </el-form>
+        
         <template>
-            <el-table
-              :data="groupDatas"
-              height="350"
-              ref="multipleTable"
-              border
-              @selection-change="handleSelectionChange"
-              style="width: 100%">
-               <el-table-column
-                type="selection"
-                width="55">
-              </el-table-column>
-              <el-table-column
-                prop="num"
-                label="编号">
-              </el-table-column>
-              <el-table-column
-                prop="group_name"
-                label="名称">
-              </el-table-column>
-            </el-table>
+          <table class="dcs-common-table dcs-common-table--text" width="100%">
+            <thead>
+              <tr>
+                <th>编号</th>
+                <th>名称</th>
+              </tr>
+            </thead>
+            <draggable element="tbody" v-model="groupDatas" :options="{dragClass: 'sd_drag', animation:300}">
+              <tr v-for="group in groupDatas">
+                <td>{{group.number}}</td>
+                <td>{{group.name}}</td>
+              </tr>
+            </draggable>
+          </table>
           </template>
-          <div class="tool-button-content"><!-- <el-button type="primary" @selection-change="handleSelectionChange" size="mini">全选</el-button> --><el-button type="primary" @click="toggleSelection()" size="mini">全不选</el-button><el-button size="mini" type="primary">创建用例组</el-button></div>
+          <div class="tool-button-content"><el-button size="mini" @click="submitForm(addGroupForm)" type="primary">创建用例组</el-button></div>
+          </el-form>
      </div>
 	</el-dialog>
  </div>
 </template>
 <script>
-    export default {
+  import types from '../../store/project/types'
+  import {mapGetters } from 'vuex';
+  import draggable from 'vuedraggable'
+  export default {
     	name:'testRecord',
       data() {
       return {
@@ -47,52 +45,65 @@
           groupName:null,
         },
          isIndeterminate: true,
-        groupDatas: [{
-          num:'1',
-          group_name:'234231'
-        }, {
-          num:'2',
-          group_name:'234231'
-        }, {
-          num:'350',
-          group_name:'234231'
-        }, {
-          num:'4',
-          group_name:'234231'
-        }, {
-          num:'5',
-          group_name:'234231'
-        }, {
-          num:'6',
-          group_name:'234231'
-        }, {
-          num:'7',
-          group_name:'234231'
-        }],
+        groupDatas: null,
         dialogGroupVisible: false,
+        addGroupRules:{
+          groupName:[
+           { required: true, message: '请输入用例组名称', trigger: 'blur' }
+          ],
+        },
       }
     },
+    computed:{
+      ...mapGetters({
+          vxGlobal_curProjectDcs: types.GETTERS.curProjectDcs,
+      }),
+    },
     methods:{
-    	 toggleSelection(rows) {
-        if (rows) {
-          rows.forEach(row => {
-            this.$refs.multipleTable.toggleRowSelection(row);
-          });
-        } else {
-          this.$refs.multipleTable.clearSelection();
-        }
-      },
+    	 // toggleSelection(rows) {
+      //   if (rows) {
+      //     rows.forEach(row => {
+      //       this.$refs.multipleTable.toggleRowSelection(row);
+      //     });
+      //   } else {
+      //     this.$refs.multipleTable.clearSelection();
+      //   }
+      // },
 
       handleSelectionChange(val) {
         this.multipleSelection = val;
-      }
+      },
+      submitForm(formName) {
+        let vm = this
+        vm.$refs[formName].validate((valid) => {
+          if (valid) {
+            vm.buildGroupsData()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
+      buildGroupsData(){
+        let vm = this
+        let url = 'case_group'
+        vm.$axios.post(url).then(response=>{
+
+        })
+      },
 
     },
     mounted(){
       let vm = this
+      // console.log(vm.vxGlobal_curProjectDcs, 'vxGlobal_curProjectDcs');
+      vm.groupDatas = vm.vxGlobal_curProjectDcs.case_groups
+      console.log(vm.groupDatas, 'groupDatas');
       vm.$bus.$on('addGroup', (msg) => {
          vm.dialogGroupVisible = msg
        })
+    },
+    components: {
+      draggable,
     },
     beforeDestory(){
       let vm = this

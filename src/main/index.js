@@ -24,9 +24,9 @@ const winURL = process.env.NODE_ENV === 'development'
 
 function createWindow () {
   // Open the DevTools.
- // if(process.env.NODE_ENV === 'development'){}
-  BrowserWindow.addDevToolsExtension("C:/Users/Aimee/AppData/Local/Google/Chrome/User Data/Profile 2/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/4.1.4_0")
-  
+  if(process.env.NODE_ENV === 'development'){
+   BrowserWindow.addDevToolsExtension("C:/Users/Aimee/AppData/Local/Google/Chrome/User Data/Profile 2/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/4.1.4_0")
+  }
   /**
    * Initial window options
    */

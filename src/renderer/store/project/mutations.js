@@ -31,7 +31,11 @@ export default {
     state.session = getDefaultSession()
     saveSession(state.session)
   },
+  /**
+   * 获取当前打开的项目规程数据
+   */
   [types.MUTATIONS.setCurProjectDatas] (state, project) {
+    state.currentProjectData = project
     state.session.projectCurDatas = project
     saveSession(state.session)
   },

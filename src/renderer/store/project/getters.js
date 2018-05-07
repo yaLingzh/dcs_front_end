@@ -39,7 +39,7 @@ getters[types.GETTERS.isRoleSelected] = (state, getters) => {
  * @return      {[type]}                    [description]
  */
 getters[types.GETTERS.curProject] = state => {
-  let proDatas = state.session.projectCurDatas
+  let proDatas = state.currentProjectData
   if(proDatas) {
     let curProject = {
       'proName': proDatas.name,
@@ -59,7 +59,7 @@ getters[types.GETTERS.curProject] = state => {
  * @return      {[type]}                    [description]
  */
 getters[types.GETTERS.curProjectDcs] = state => {
-  let proDatas = state.session.projectCurDatas
+  let proDatas = state.currentProjectData || state.session.projectCurDatas
   if(proDatas){
     return proDatas
   }

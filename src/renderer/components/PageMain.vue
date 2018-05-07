@@ -75,7 +75,7 @@ export default {
   },
   created(){
     let vm = this
-    vm.historyProjectData = vm.getStorageDataAndDecode('historyProject')
+    
   },
   components:{
     login: resolve => require(['./login/login.vue'], resolve),

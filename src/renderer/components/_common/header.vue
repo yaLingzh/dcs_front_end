@@ -78,7 +78,7 @@
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-pause"></em>
 		          <p>暂停</p></a></dd>
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-out"></em>
-		          <p>退出</p></a></dd>
+		          <p>退出执行</p></a></dd>
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-repeat"></em>
 		          <p>循环运行</p></a></dd>
 		          <dd><a @click="popTestTable"><em class="iconfont icon-header-stop"></em>
