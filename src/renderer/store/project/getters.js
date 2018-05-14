@@ -59,10 +59,8 @@ getters[types.GETTERS.curProject] = state => {
  * @return      {[type]}                    [description]
  */
 getters[types.GETTERS.curProjectDcs] = state => {
-  let proDatas = state.currentProjectData || state.session.projectCurDatas
-  if(proDatas){
-    return proDatas
-  }
+  let proDatas = state.currentProjectData ? state.currentProjectData : state.session.projectCurDatas
+  return proDatas
 }
 
 getters[types.GETTERS.variablePointeList] = state => {

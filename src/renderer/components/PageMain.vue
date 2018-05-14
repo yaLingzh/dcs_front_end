@@ -66,7 +66,7 @@ export default {
   },
   mounted(){
     let vm = this
-    if(!vm.$_.isEmpty(vm.vxGlobal_curProject)&&vm.vxGlobal_isLogged){
+    if(vm.$_.isEmpty(vm.vxGlobal_curProject)&&vm.vxGlobal_isLogged){
       vm.status.isShowTemplate = true
     }
     vm.$bus.$on('mainpageshowbox', msg=>{

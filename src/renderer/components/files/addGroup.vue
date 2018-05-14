@@ -9,7 +9,7 @@
         <el-form-item>
           【提示：用例组可上下拖拽调整顺序！】
         </el-form-item>
-        
+        {{groupDatas|log}}
         <template>
           <table class="dcs-common-table dcs-common-table--text" width="100%">
             <thead>
@@ -77,7 +77,7 @@
         let vm = this
         vm.$refs[formName].validate((valid) => {
           if (valid) {
-            vm.buildGroupsData()
+            // vm.buildGroupsData()
           } else {
             console.log('error submit!!');
             return false;
@@ -96,7 +96,7 @@
     mounted(){
       let vm = this
       // console.log(vm.vxGlobal_curProjectDcs, 'vxGlobal_curProjectDcs');
-      vm.groupDatas = vm.vxGlobal_curProjectDcs.case_groups
+      vm.groupDatas = vm.vxGlobal_curProjectDcs.cases
       console.log(vm.groupDatas, 'groupDatas');
       vm.$bus.$on('addGroup', (msg) => {
          vm.dialogGroupVisible = msg

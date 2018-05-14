@@ -99,7 +99,7 @@
  		let vm = this
  		vm.historyProjectData = vm.getStorageDataAndDecode('historyProject')
  		console.log(vm.historyProjectData);
- 		if(!vm.vxGlobal_curProject){
+ 		if(!vm.vxGlobal_curProject.name){
  			vm.status.dialogVisibleProject = true
  		}
  		vm.$bus.$on('historyprojectbox', (msg) => {
@@ -113,6 +113,7 @@
     ...mapGetters({
         vxGlobal_curProject: types.GETTERS.curProject,
         vxGlobal_roles: types.GETTERS.roles,
+        vxGlobal_isLogged: types.GETTERS.isLogged,
       }),
   },
  	mounted(){
@@ -141,7 +142,7 @@
 			  }, function(filenames) {
 			    // filenames是一个数组, 每一项为选择的文件的绝对路径
 			    if(vm.$_.isEmpty(filenames)){
-			    	vm.$message.wraing('没有选择文件夹')
+			    	vm.$message.warning('没有选择文件夹')
 			    	return
 			    }
 			    let firstFile = filenames[0]
@@ -200,9 +201,6 @@
  				}
  			})
  		},
- 		showUserLoginDialog(){
-
- 		}
  	}
  }
 </script>

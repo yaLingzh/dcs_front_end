@@ -15,7 +15,7 @@
 				    <el-input type="password" v-model="loginForm.pass" auto-complete="off"></el-input>
 				  </el-form-item>
 				  <el-form-item>
-				    <el-button type="primary" >游客</el-button>
+				    <el-button >游客</el-button>
 				    <el-button @click="submitForm('loginForm')">登录</el-button>
 				  </el-form-item>
 				</el-form>
