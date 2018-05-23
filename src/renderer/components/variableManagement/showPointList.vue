@@ -32,7 +32,7 @@
         status:{
           dialogPointListVisible:false,
         },
-        checkVariableAll: true,
+        checkVariableAll: false,
         checkedVariable: [],
         isIndeterminate: false,
 				variableSettingData:null,
@@ -64,9 +64,10 @@
         vm.$axios.get(url).then(response=>{
           if(response.status == 200){
             vm.variableSettingAllData = response.data.data
-            vm.variableFixedData = response.data.data.map(item=>{ if(item.fixed){ return item.display} })
+            vm.variableFixedData = vm.$_.compact(response.data.data.map(item=>{ if(item.fixed){ return item.display} }))
             vm.variableSettingData = response.data.data.map(item=>{return item.display})
-           
+            vm.checkedVariable = vm.$_.clone(vm.variableFixedData)
+            vm.$store.commit(types.MUTATIONS.setSubmittedPointeList, vm.checkedVariable)
             vm.$store.commit(types.MUTATIONS.setVariablePointListData, response.data.data)
           }else{
             vm.$message.error('获取设置列表失败！')
@@ -76,7 +77,7 @@
 			/*选择*/
        handleCheckVariableAllChange(val) {
         let vm = this
-        vm.checkedVariable = val ? vm.variableSettingData : vm.$_.compact(vm.variableFixedData);
+        vm.checkedVariable = val ? vm.variableSettingData : vm.variableFixedData;
         vm.isIndeterminate = false;
       },
       handleCheckedVariableChange(value) {

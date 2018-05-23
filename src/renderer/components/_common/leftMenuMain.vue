@@ -16,7 +16,10 @@
           :props="defaultProps"
           :highlight-current="true"
           :filter-node-method="filterNode"
+           node-key="id"
+          :default-expanded-keys="defaultCheckedKeys"
           @node-click="getCurrentNodeData"
+          @current-change="getCurrentNodeData"
           ref="treeProDatas">
         </el-tree>
       </div>
@@ -36,10 +39,12 @@
         defaultActive:1,
         menuData:['cases','case_groups','procedures'],
         treeAllDatas:[],
+        defaultCheckedKeys:[],
         defaultProps: {
           children: 'children',
           label: 'label'
-        }
+        },
+        targetRunDcs:null,
 			}
 		},
     computed:{
@@ -50,6 +55,12 @@
     created(){
       let vm = this 
       vm.initMenuTreeDatas()
+      vm.$bus.$on('currentRunDcs', msg=>{
+        if(!msg) return
+        // vm.targetRunDcs = msg
+        vm.needSetCheckedKeys(msg)
+        vm.getCheckedNodes()
+      })
     },
 		watch: {
        filterText(val) {
@@ -63,16 +74,19 @@
         let vm = this
         let treeDatas = {}
         treeDatas.level = 1
-        vm.$_.forEach(vm.menuData, p_item=>{
-          let child = vm.vxGlobal_curProjectDcs[p_item].map(item=>{
+        vm.$_.forEach(vm.menuData, (p_item, p_index)=>{
+          let child = vm.vxGlobal_curProjectDcs[p_item].map((item, index)=>{
             return {
+              id: item.obj_type + '_' + (index+1),
               label: item.name,
               currentLevel:p_item,
               number:item.number,
+              obj_type: item.obj_type,
               level: 2
             }
           })
           treeDatas = {
+            id:'parent' +'_'+ (p_index+1),
             label:p_item,
             currentLevel:null,
             children: child
@@ -82,11 +96,32 @@
       },
       getCurrentNodeData(value, data, node){
         let vm = this
+        vm.$refs.treeProDatas.setCheckedKeys([]);
         vm.$bus.$emit('currentProKey', value)
       },
       filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
+      },
+
+      needSetCheckedKeys(datas){
+        let vm = this
+        
+        vm.treeAllDatas.forEach(p_item=>{
+          let nodeKeys = p_item.children.filter(c_child=>{
+            return datas.number == c_child.number && datas.type == c_child.obj_type
+          })
+          if(!vm.$_.isEmpty(nodeKeys)){
+            vm.defaultCheckedKeys.push(nodeKeys[0].id)
+          }
+        })
+        vm.$refs.treeProDatas.setCheckedKeys(vm.$_.flatten(vm.defaultCheckedKeys))
+      },
+      getCheckedNodes() {
+        let vm = this
+        let nodeKey = this.$refs.treeProDatas.getCheckedKeys()
+        let nodeData = this.$refs.treeProDatas.getCheckedNodes()
+        vm.$bus.$emit('currentProKey', nodeData[0])
       },
      
     },

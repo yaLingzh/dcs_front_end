@@ -69,7 +69,7 @@
 		      <!-- 规程测试 -->
 		      <div class="ovh" v-if="currentNav == 'workTest'">
 		        <dl class="header-nav-child">
-		          <dd><a href="javascript:;"><em class="iconfont icon-header-goon"></em>
+		          <dd><a href="javascript:;" @click="automaticOperation"><em class="iconfont icon-header-goon"></em>
 		          <p>自动执行</p></a></dd>
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-singleplay"></em>
 		          <p>单步执行</p></a></dd>
@@ -77,7 +77,7 @@
 		          <p>继续</p></a></dd>
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-pause"></em>
 		          <p>暂停</p></a></dd>
-		          <dd><a href="javascript:;"><em class="iconfont icon-header-out"></em>
+		          <dd><a href="javascript:;" @click="isStopRunFun" ><em class="iconfont icon-header-out"></em>
 		          <p>退出执行</p></a></dd>
 		          <dd><a href="javascript:;"><em class="iconfont icon-header-repeat"></em>
 		          <p>循环运行</p></a></dd>
@@ -142,7 +142,8 @@
  			currentNav: 'files',
  			childNav:'',
  			status:{
- 				languageEn:false
+ 				languageEn:false,
+ 				isCurrentPro:false,
  			}
  		}
  	},
@@ -153,12 +154,30 @@
         vxGlobal_token: types.GETTERS.token,
       }),
   },
+  created(){
+  	let vm = this
+  	vm.$bus.$on('currentProKey', msg=>{
+  		if(msg){
+  			vm.isCurrentPro = true
+  		}else{
+  			vm.isCurrentPro = false
+  		}
+  	})
+  },
  	methods:{
  		_initCurrentOpenPro,
  		uploadSuccess(response, file, fileList){
  			let vm = this
  			vm._initCurrentOpenPro()
  			vm.$message.success('导入成功')
+ 		},
+ 		automaticOperation(){
+ 			let vm = this
+ 			if(!vm.isCurrentPro){
+ 				vm.$message.warning('请打开要执行的规程!');
+ 				return false
+ 			}
+ 			vm.$bus.$emit('automaticOperation', true)
  		},
  		
  		newProject(){
@@ -234,6 +253,10 @@
     	let vm = this
     	let routerLink = vm.$router.resolve({name: 'variable', path: '/variable'})
     	window.open(routerLink.href, '_blank')
+    },
+    isStopRunFun(){
+    	let vm = this
+    	vm.$bus.$emit('stopRun', true);
     },
  	},
 

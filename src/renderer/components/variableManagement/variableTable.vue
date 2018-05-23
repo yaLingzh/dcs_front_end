@@ -45,7 +45,7 @@
       >
        <el-table-column
         :label="head.display"
-        width="130"
+        width="100"
         v-for="(head, index) in isShowTheadName(theaderDatas)"
         v-if="head.name == 'force_value_display'"
         :key="head.name"

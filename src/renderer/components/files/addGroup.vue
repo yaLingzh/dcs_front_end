@@ -3,13 +3,13 @@
  	<el-dialog title="新建用例组" width="57%" :visible.sync="dialogGroupVisible">
  		<div class="grid-middle-content test-record-content">
        <el-form ref="addGroupForm" :inline="true" :rules="addGroupRules" :model="dataFrom" class="demo-form-inline">
-        <el-form-item label="用例组名称">
+        <!-- <el-form-item label="用例组名称">
           <el-input v-model="dataFrom.groupName" size="50"></el-input>
-        </el-form-item>
+        </el-form-item> -->
         <el-form-item>
           【提示：用例组可上下拖拽调整顺序！】
         </el-form-item>
-        {{groupDatas|log}}
+        <!-- {{groupDatas|log}} -->
         <template>
           <table class="dcs-common-table dcs-common-table--text" width="100%">
             <thead>
@@ -84,6 +84,9 @@
           }
         });
       },
+      initDatas(){
+        let vm = this
+      },
       buildGroupsData(){
         let vm = this
         let url = 'case_group'
@@ -93,11 +96,13 @@
       },
 
     },
+    created(){
+      let vm = this
+       vm.groupDatas = vm.$store.getters[types.GETTERS.curProjectDcs].cases //vm.vxGlobal_curProjectDcs.cases
+       console.log(vm.groupDatas)
+    },
     mounted(){
       let vm = this
-      // console.log(vm.vxGlobal_curProjectDcs, 'vxGlobal_curProjectDcs');
-      vm.groupDatas = vm.vxGlobal_curProjectDcs.cases
-      console.log(vm.groupDatas, 'groupDatas');
       vm.$bus.$on('addGroup', (msg) => {
          vm.dialogGroupVisible = msg
        })

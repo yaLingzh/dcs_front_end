@@ -16,22 +16,22 @@
 .header-top-name{
   @include height(auto, 3.4rem, 3.4rem);
   @extend %textAlign;
-  font-size:1.5rem;
+  font-size:1.3rem;
   color:#fff;
 }
 .header-nav-first{
-  padding-top:2px;
+  padding-top:0.7rem;
   text-align:left;
   li{
     @extend %display;
     @include vam;
     margin:0 0.2rem;
     padding: 0 1rem;
-    line-height: 3rem;
+    line-height: 2.3rem;
     @extent %textAlign;
-    border-radius:0.5rem 0.5rem 0 0;
+    border-radius:0.3rem 0.3rem 0 0;
     color:#fff;
-    font-size:1.5rem;
+    font-size:1.3rem;
     a{
       color:#fff;
     }

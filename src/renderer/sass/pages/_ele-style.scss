@@ -73,7 +73,7 @@
 	}
 	.cell{
 		/* // line-height: 3rem; */
-		padding:1rem 0 1rem 1.2rem;
+		// padding:1rem 0 1rem 1.2rem;
 	}
 }
 .el-table td, .el-table th{
@@ -94,7 +94,7 @@
 .el-tree-node__content{
 	height:35px;
 }
-.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content{
+.el-tree--highlight-current .el-tree-node.is-current>.el-tree-node__content,.el-tree--highlight-current .el-tree-node.is-checked>.el-tree-node__content{
 	background:#4294f7;
 	color:#fff;
 }

@@ -25,7 +25,7 @@ const winURL = process.env.NODE_ENV === 'development'
 function createWindow () {
   // Open the DevTools.
   if(process.env.NODE_ENV === 'development'){
-   BrowserWindow.addDevToolsExtension("C:/Users/Aimee/AppData/Local/Google/Chrome/User Data/Profile 2/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/4.1.4_0")
+   BrowserWindow.addDevToolsExtension("D:/安装软件/vue/vue-devtools/shells/chrome")
   }
   /**
    * Initial window options

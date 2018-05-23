@@ -15,14 +15,14 @@
 			    <el-table-column
 			      prop="name"
 			      label="名称"
-			      width="120">
+			      width="300">
 			    </el-table-column>
 			    <el-table-column
 			      fixed="right"
 			      label="操作"
 			      width="120">
 			      <template slot-scope="scope">
-			        <el-button  @click="openProClick(scope.row)" type="text" size="small">查看</el-button>
+			        <el-button  @click="openProClick(scope.row)" type="text" size="small">打开</el-button>
 			        <el-button type="text" size="small"  @click="newBuildPro">新建</el-button>
 			      </template>
 			    </el-table-column>
@@ -98,8 +98,8 @@
  	created(){
  		let vm = this
  		vm.historyProjectData = vm.getStorageDataAndDecode('historyProject')
- 		console.log(vm.historyProjectData);
- 		if(!vm.vxGlobal_curProject.name){
+ 		// console.log(vm.historyProjectData);
+ 		if(!vm.vxGlobal_curProject.name&&vm.vxGlobal_isLogged){
  			vm.status.dialogVisibleProject = true
  		}
  		vm.$bus.$on('historyprojectbox', (msg) => {
