@@ -11,20 +11,20 @@
           <!-- 变量组管理 -->
           <div class="ovh" v-if="currentNav == 'variable'">
             <dl class="header-nav-child">
-              <dd class="header-nav-child-current"><a @click="showList"><em class="iconfont icon-header-showlist"></em>
-              <p>显示列</p></a></dd>
-              <dd  @click="resetCurrentGroutPoint"><a href="javascript:;"><em class="iconfont icon-header-cancelcurrent"></em>
-              <p>取消强制</p></a></dd>
-              <!-- <dd><a href="javascript:;"><em class="iconfont icon-header-cancelall"></em>
-              <p>取消所有强制</p></a></dd> -->
-           <!--    <dd><a @click="mandatory"><em class="iconfont icon-header-search"></em>
-              <p>搜索</p></a></dd> -->
-              <!-- <dd><a href="javascript:;"><em class="iconfont icon-header-edit"></em>
-              <p>编辑组</p></a></dd> -->
-              <dd @click="saveNewGroutPoint"><a href="javascript:;"><em class="iconfont icon-header-save"></em>
-              <p>保存新组</p></a></dd>
-              <!-- <dd><a @click="mandatory"><em class="iconfont icon-header-all"></em>
-              <p>所有强制列表</p></a></dd> -->
+              <dd class="header-nav-child-current"><el-button type="primary" @click="showList"><em class="iconfont icon-header-showlist"></em>
+              <p>显示列</p></el-button></dd>
+              <dd  @click="resetCurrentGroutPoint"><el-button type="primary"><em class="iconfont icon-header-cancelcurrent"></em>
+              <p>取消强制</p></el-button></dd>
+              <!-- <dd><el-button type="primary"><em class="iconfont icon-header-cancelall"></em>
+              <p>取消所有强制</p></el-button></dd> -->
+           <!--    <dd><el-button type="primary" @click="mandatory"><em class="iconfont icon-header-search"></em>
+              <p>搜索</p></el-button></dd> -->
+              <!-- <dd><el-button type="primary"><em class="iconfont icon-header-edit"></em>
+              <p>编辑组</p></el-button></dd> -->
+              <dd @click="saveNewGroutPoint"><el-button type="primary"><em class="iconfont icon-header-save"></em>
+              <p>保存新组</p></el-button></dd>
+              <!-- <dd><el-button type="primary" @click="mandatory"><em class="iconfont icon-header-all"></em>
+              <p>所有强制列表</p></el-button></dd> -->
               <!-- <dt>变量组管理</dt> -->
             </dl>
           </div>

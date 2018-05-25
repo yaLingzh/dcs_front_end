@@ -82,10 +82,17 @@
   }
   dd{
     @extend %display;
-    padding:0.5rem 1.4rem 0;
+    // padding:0.5rem 1.4rem 0;
     border-radius:5px;
     @extend %textAlign;
-    a{display: block;}
+    button{
+      @extend %vam;
+      min-width:9rem;
+      padding:1.2rem 0;
+      background-color:#f2f2f2;
+      border-color:#f2f2f2;
+      color:#000;
+    }
     &:hover,&.navChildCurrent{
       color:#fff;
       .icon-header-open{
@@ -93,7 +100,7 @@
       }
       em{
         color:#fff;
-        background:#66b1ff;
+        background:none;//#66b1ff;
       }
     }
     em{

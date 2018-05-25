@@ -1,18 +1,19 @@
 <template>
 	<div>
-		<!-- {{currentProjectMessData|log}} -->
+		{{currentProjectMessData|log}}
 		<div class="dsc-table-content" style="min-height:80rem">
 		<table class="dcs-common-table" v-if="currentProjectMessData">
 			<!-- 当前规程为CASES -->
 			<template  v-if="resultMsg == 'cases'">
 			<thead>
 				<tr v-for="(valRow, index) in currentProjectMessData" v-if="index < 3">
-					<th style="width:30rem" v-for="(title, index) in valRow">{{title}}</th>
+					<th :class="{'th1':index==0, 'th4':index == 3,'th5':index==5,'th6':index==6}" v-for="(title, index) in valRow">{{title}}</th>
 				</tr>
 			</thead>
 			<tbody>
 				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index" >
-					<td v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
+				  <td v-if="colspan(valRow) == true" colspan="9">{{valRow[0]}}</td>
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
 				</tr>
 			</tbody>
 			</template>
@@ -20,12 +21,13 @@
 			<template v-else>
 				<thead>
 				<tr v-for="(valRow, index) in currentProjectMessData" v-if="index < 4">
-					<th style="width:30rem" v-for="(title, index) in valRow">{{title}}</th>
+					<th v-for="(title, index) in valRow" :class="{'th1':index==0,'th4':index == 3, 'th5':index==5,'th6':index==6}">{{title}}</th>
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index" >
-					<td v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
+				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': index == isRunOk(index)}" :key="'row_'+index" >
+				  <td v-if="colspan(valRow) == true" colspan="9">{{valRow[0]}}</td>
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
 				</tr>
 			</tbody>
 			</template>
@@ -37,12 +39,13 @@
 <script>
 	import types from '../../store/project/types'
   import {mapGetters } from 'vuex';
+  var setTimer = null
  export default{
  	name:'currentProMess',
  	data(){
  		return {
  			currentKeyIndex:null,
- 			currentRunResult:null,
+ 			currentRunResult:null, //result 当前的结果数据值 
  			currentProjectData:null,
  			currentProjectMessData:null, 
  			resultMsg:'cases',
@@ -50,7 +53,9 @@
  			loopStatus:null,  //是否循环
  			nextStatus:null, //是否有下一步子
  			isStopRun:false, //是否停止运行
- 			setTimer:null, 
+ 			isSingleStatus:false, //是否是单步执行
+ 			isAutomaticOperation:false, //是否是自动执行
+ 			// setTimer:null, 
  		}
  	},
  	computed:{
@@ -60,9 +65,8 @@
   },
  	created(){
  		let vm = this
- 		vm.initRunDatas(); 
-
- 		setTimeout(vm.intervalTime, 1000); 
+ 		vm.initCurrentDatas(); 
+ 		setTimeout(vm.intervalTime, 1000);
 
  		vm.$bus.$on('currentProKey', msg=>{
  			vm.currentProjectData = msg
@@ -75,17 +79,69 @@
 			}
  		})
  		vm.$bus.$on('automaticOperation', msg=>{
- 			if(msg){
- 				vm.runBeginFun()
+ 			vm.isAutomaticOperation = msg
+ 			if(msg&&!vm.runResultStatus){
+ 				vm.getRunBegin()
+ 			}else{
+ 				vm.intervalTime();
+ 			}
+ 		})
+ 		vm.$bus.$on('singleOperation', msg=>{
+ 			vm.isSingleStatus = msg
+ 			if(msg&&!vm.runResultStatus){
+ 				vm.getRunBegin()
+ 			}else{
+ 				vm.intervalTime()
+ 			}
+ 			if(!vm.loopStatus&&vm.nextStatus){
+ 				  vm.goRunStep()	
  			}
  		})
  		vm.$bus.$on('stopRun', msg=>{
+ 			vm.isStopRun = msg
+ 			if(!vm.runResultStatus){
+ 				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
+ 				return
+ 			}
  			if(msg){
  				vm.stopRunStep()
- 				vm.isStopRun = true
  			}
  		})
 
+ 		vm.$bus.$on('pause', msg=>{
+ 			if(!vm.runResultStatus){
+ 				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
+ 				return
+ 			}
+ 			if(msg){
+ 				vm.$message.info('执行的规程已经暂停!');
+ 				vm.clearInterval()
+ 				vm.initCurrentDatas()
+ 			}
+ 			
+ 		})
+
+ 		vm.$bus.$on('goOnRun', msg=>{
+ 			if(!vm.runResultStatus){
+ 				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
+ 				return
+ 			}
+ 			if(msg){
+ 				vm.$message.info('当前执行规程已恢复执行！')
+ 				vm.intervalTime()
+ 			}
+ 		})
+ 		
+ 		vm.$bus.$on('loopGoOnRun', msg=>{
+ 			if(!vm.runResultStatus){
+ 				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
+ 				return
+ 			}
+ 			if(msg&&vm.$_.isEmpty(vm.currentRunResult)){
+ 				vm.getRunBegin()
+ 			}
+ 		})
+ 		
  	},
  	mounted(){
  		let vm = this
@@ -101,15 +157,18 @@
  		 * @version     [1]
  		 * @return      {[Object]}              
  		 */
- 		initRunDatas(){
+ 		initCurrentDatas(){
  			let vm = this
  			let url = '/run/current'
  			vm.$axios.get(url).then(response=>{
  				if(response.status == 200){
- 					vm.currentRunResult = response.data
  					if(!vm.$_.isEmpty(response.data)){
  						vm.runResultStatus = true
+ 						vm.currentRunResult = response.data
  						vm.$bus.$emit('currentRunDcs', response.data.obj);
+ 						if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+	   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
+	 					}
  					}else{
  						vm.runResultStatus = false
  					}
@@ -123,13 +182,13 @@
     /**
      * @Author      supper520love@126.com
      * @DateTime    2018-05-21
-     * @discription {开始运行自动执行方法事件}
+     * @discription {开始运行执行方法事件}
      * @param       {obj_type, number}
      * @requires    {200}
      * @version     [version]
      * @return      {[Object]}             
      */
- 		runBeginFun(){
+ 		getRunBegin(){
  			let vm = this, url = '/run/run'
  			let params = {
  				obj_type: vm.currentProjectData.obj_type,
@@ -142,10 +201,9 @@
  			vm.$axios.post(url, params).then(response=>{
  				if(response.status == 200){
  					vm.runResultStatus = true
- 					vm.currentRunResult = response.data
  					vm.loopStatus = response.data.loop
  					vm.nextStatus = response.data.has_next
- 					vm.comparisonData(vm.currentProjectMessData, vm.currentRunResult.result)
+ 					vm.intervalTime();
  				}else{
  					vm.$message.warning('当前扫执行规程出错，请重新请求！')
  				}
@@ -165,21 +223,29 @@
  			vm.$axios.get(url).then(response=>{
  				if(response.status == 200){
  					vm.currentRunResult = response.data
- 					vm.comparisonData(vm.currentProjectMessData, vm.currentRunResult.result)
  					vm.loopStatus = response.data.loop
  					vm.nextStatus = response.data.has_next
+ 					
+ 					if(!vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
+ 						vm.goRunStep()
+ 					}else if(!vm.nextStatus){
+ 						vm.clearInterval()
+ 					}
+ 					if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+   					vm.comparisonData(vm.currentProjectMessData, response.data.result)
+ 					}
  				}else{
  					vm.$message.warning('请求数据出错！')
  				}
  			}).catch(response=>{
+ 				console.log(response)
  				vm.$message.error('运行规程出错，请重新请求！')
- 				return
  			})
  		},
  		/**
  		 * @Author      supper520love@126.com
  		 * @DateTime    2018-05-23
- 		 * @discription {{继续运行规程}}
+ 		 * @discription {{执行下一步规程}}
  		 * @param       {number} 规程编号
  		 * @version     [version]
  		 * @return      {[type]}              [description]
@@ -191,7 +257,6 @@
  			}
  			vm.$axios.post(url, params).then(response => {
  				if(response.status == 200){
- 					vm.currentRunResult = response.data
  					vm.loopStatus = response.data.loop
  					vm.nextStatus = response.data.has_next
  				}
@@ -205,9 +270,10 @@
  			} 
  			vm.$axios.post(url, params).then(response => {
  				if(response.status == 200){
- 					vm.isStopRun = response.data
-    			clearInterval(vm.setTimer)
+    			vm.clearInterval()
  					vm.runResultStatus = false
+ 					vm.$bus.$emit('readyStopRun', false);
+ 					vm.$message.info('成功退出当前规程执行！')
  				}else{
  					vm.$message.warning('停止运行请求数据出错！')
  				}
@@ -216,25 +282,71 @@
  			})
  		},
 
- 		comparisonData(targetData, newData){
+ 		/**
+ 		 * 执行规程中数据值显示变更
+ 		 */
+
+ 		comparisonData(targetReplaceData, currentDataResult){
  			let vm = this
- 			let currentData = newData
- 			let targetDatas = targetData
- 			let getResultData = []
- 			let currentDataKeys = currentData.keys()
- 			console.log(currentDataKeys, 'currentDataKeys')
- 			// currentData.map((item, key)=>{
- 				
- 			// })
+ 			// console.log(targetReplaceData, 'currentDataResult')
+ 			_.forEach(targetReplaceData, (p_item, p_key)=>{
+ 				 if(p_key > 4){
+ 				   _.map(currentDataResult, (c_item, c_key)=>{
+ 				   	if(!c_item.points_result) {return}
+ 				   		let expectResult = []
+ 				   	  let actualResult = []
+ 				   	 c_item.points_result.map(r_item =>{
+	 				   		expectResult.push(r_item.point + '=' + r_item.value)
+ 				    	})
+ 				    c_item.points_result.map(r_item =>{
+ 				   		actualResult.push(r_item.place + r_item.point + '=' + r_item.value)
+ 				   	})
+ 				   	 targetReplaceData[c_key][3] = vm.$_.toString(expectResult)
+ 				   	 targetReplaceData[c_key][4] = vm.$_.toString(actualResult)
+ 				   	 if(c_item.status == true){
+ 				   	  targetReplaceData[c_key][5] = c_item.status	
+ 				   	 }else{
+ 				   	 	targetReplaceData[c_key][6] = c_item.status
+ 				   	 }
+	 				 })	
+ 				 }
+ 				 
+ 			})
+ 		},
+
+ 		colspan(data){
+ 			let vm = this
+ 			let compact = vm.$_.compact(data);
+ 			if(compact.length == 1){
+ 				return true
+ 			}
+ 			
+ 		},
+
+ 		/*是否已经执行过了*/
+ 		isRunOk(key){
+ 			let vm = this
+ 			let resultKeys = {}
+ 			if(vm.currentRunResult){
+ 				resultKeys = vm.$_.keys(vm.currentRunResult.result)
+ 			}
+ 			return vm.$_.toString(vm.$_.filter(resultKeys, item=>{
+ 				 return item == key
+ 			}))
+ 		},
+ 		clearInterval(){
+ 			let vm = this
+ 			clearInterval(setTimer)
+ 			return
  		},
 
  		intervalTime(){
  			let vm = this
- 			if(vm.runResultStatus){
- 				vm.setTimer = setInterval(vm.getCurrentRunResult(), 500)
- 			}else{
- 				return
+ 			clearInterval(setTimer)
+ 			if(vm.runResultStatus&&(vm.isAutomaticOperation||vm.isSingleStatus)){
+ 				setTimer = setInterval(vm.getCurrentRunResult, 500)
  			}
+ 			
  		}
  	},
  }
@@ -243,6 +355,28 @@
 <style scoped="scoped" lang="scss">
   .dcs-common-table{
    tr{
+   	th{
+   		width:20rem;
+   		&.th1{
+   			width:8rem;
+   		}
+   		&.th4{
+   			width:25rem;
+   		}
+   		&.th5{
+   			width:15rem;
+   		}
+   		&.th6{
+   			width:8rem;
+   		}
+   	}
+   	td{
+   		word-wrap:break-word;
+   		word-break:break-all;
+   		&.noLb{
+   			border-left:none;
+   		}
+   	}
    	//执行的当前tr
    	&.dcs-run-current{
 			td{
