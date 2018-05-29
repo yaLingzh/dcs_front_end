@@ -3,10 +3,10 @@
   <top-header v-if="status.isShowTemplate"></top-header>
   <div class="body-content" v-if="status.isShowTemplate">
     <el-row :gutter="0" >
-      <el-col :span="4">
+      <el-col :span="4" class="side-left">
         <left-menu ></left-menu>
       </el-col>
-      <el-col :span="20">
+      <el-col :span="20" class="side-right">
         <div class="grid-content grid-bg-purple" >
           <p class="grid-middle-title"><!-- <em class="el-icon-minus"></em> --></p>
           <div class="grid-middle-content">

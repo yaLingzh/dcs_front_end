@@ -1,9 +1,9 @@
 <template>
 	<div>
-		{{currentProjectMessData|log}}
 		<div class="dsc-table-content" style="min-height:80rem">
 		<table class="dcs-common-table" v-if="currentProjectMessData">
 			<!-- 当前规程为CASES -->
+			<!-- {{currentProjectMessData|log}} -->
 			<template  v-if="resultMsg == 'cases'">
 			<thead>
 				<tr v-for="(valRow, index) in currentProjectMessData" v-if="index < 3">
@@ -11,9 +11,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index" >
-				  <td v-if="colspan(valRow) == true" colspan="9">{{valRow[0]}}</td>
-					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
+				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index"  :class="{'dcs-run-has': index == isRunOk(index), 'tabHead':currentTableHead(valRow) == true}">
+				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'td5':index==5}">
+						<span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
+					 <span v-else-if="val == false && ! $_.isEmpty(val) && index ==6"><em class="el-icon-close"></em></span>
+					 <span v-else>{{val}}</span>
+					</td>
 				</tr>
 			</tbody>
 			</template>
@@ -25,9 +29,13 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': index == isRunOk(index)}" :key="'row_'+index" >
-				  <td v-if="colspan(valRow) == true" colspan="9">{{valRow[0]}}</td>
-					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index">{{val}}</td>
+				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': index == isRunOk(index),'tabHead':currentTableHead(valRow)}" :key="'row_'+index" >
+				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'tdCenter':index==5||index==6}">
+					 <span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
+					 <span v-else-if="(val == false||val==0) && !$_.isEmpty(val) && index ==6"><em class="el-icon-close"></em></span>
+					 <span v-else>{{val}}</span>
+					 </td>
 				</tr>
 			</tbody>
 			</template>
@@ -46,7 +54,7 @@
  		return {
  			currentKeyIndex:null,
  			currentRunResult:null, //result 当前的结果数据值 
- 			currentProjectData:null,
+ 			currentProjectData:null, //当前要运行的 规程
  			currentProjectMessData:null, 
  			resultMsg:'cases',
  			runResultStatus:false,  //是否有规程在运行
@@ -55,6 +63,7 @@
  			isStopRun:false, //是否停止运行
  			isSingleStatus:false, //是否是单步执行
  			isAutomaticOperation:false, //是否是自动执行
+ 			isLoop:false,
  			// setTimer:null, 
  		}
  	},
@@ -67,9 +76,15 @@
  		let vm = this
  		vm.initCurrentDatas(); 
  		setTimeout(vm.intervalTime, 1000);
-
  		vm.$bus.$on('currentProKey', msg=>{
  			vm.currentProjectData = msg
+ 			//今年列表数据 
+ 			if(msg.isStopData && vm.$_.has(msg, 'isStopData')){
+ 				vm.stopCurrentDcsDatas(msg.run_uuid)
+ 				vm.resumeCurrentSelectDcs(msg.run_uuid)
+ 				vm.intervalTime();
+ 				return
+ 			}
  			vm.resultMsg = msg.currentLevel
 			if(msg.level != 1 && !vm.$_.isEmpty(vm.resultMsg)){
 			  let currentProject = vm.$_.filter(vm.vxGlobal_curProjectDcs[vm.resultMsg], item=>{if(item.name == msg.label) {return item.content_rows}})
@@ -77,7 +92,13 @@
 			}else{
 				return
 			}
+
  		})
+ 		vm.$watch('currentProjectData', ()=>{
+ 			vm.runResultStatus = false
+ 			vm.currentRunResult = null
+ 		})
+
  		vm.$bus.$on('automaticOperation', msg=>{
  			vm.isAutomaticOperation = msg
  			if(msg&&!vm.runResultStatus){
@@ -86,6 +107,7 @@
  				vm.intervalTime();
  			}
  		})
+ 		// 单步执行
  		vm.$bus.$on('singleOperation', msg=>{
  			vm.isSingleStatus = msg
  			if(msg&&!vm.runResultStatus){
@@ -93,23 +115,24 @@
  			}else{
  				vm.intervalTime()
  			}
- 			if(!vm.loopStatus&&vm.nextStatus){
+ 			if(vm.loopStatus&&vm.nextStatus){
  				  vm.goRunStep()	
  			}
  		})
  		vm.$bus.$on('stopRun', msg=>{
  			vm.isStopRun = msg
  			if(!vm.runResultStatus){
+ 				vm.$bus.$emit('readyStopRun', false)
  				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
  				return
  			}
- 			if(msg){
- 				vm.stopRunStep()
- 			}
+ 			console.log(msg, 'sotp')
+ 			vm.stopRunStep()
  		})
 
  		vm.$bus.$on('pause', msg=>{
  			if(!vm.runResultStatus){
+ 				vm.$bus.$emit('isPauseDisabled', false)
  				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
  				return
  			}
@@ -123,6 +146,7 @@
 
  		vm.$bus.$on('goOnRun', msg=>{
  			if(!vm.runResultStatus){
+ 				vm.$bus.$emit('isGoOnDisabled', false)
  				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
  				return
  			}
@@ -134,10 +158,12 @@
  		
  		vm.$bus.$on('loopGoOnRun', msg=>{
  			if(!vm.runResultStatus){
+ 				vm.$bus.$emit('isLoopDisabled', false)
  				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
  				return
  			}
  			if(msg&&vm.$_.isEmpty(vm.currentRunResult)){
+ 				vm.isLoop = msg
  				vm.getRunBegin()
  			}
  		})
@@ -147,6 +173,59 @@
  		let vm = this
  	},
  	methods:{
+ 		stopCurrentDcsDatas(uuid){
+ 			let vm = this
+ 			let url = '/run/resume/contents'
+ 			let params = {
+ 				run_uuid: uuid
+ 			}
+ 			vm.$axios.get(url, {params}).then(response => {
+ 				if(response.status == 200){
+ 					vm.currentProjectMessData = response.data.data
+ 				}else{
+ 					vm.$message.warning('获取当前恢复列表数据出错！')
+ 				}
+ 			}).catch(response => {
+ 				console.log(response + '恢复停止列表数据出错！')
+ 			})
+ 		},
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{恢复运行}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[type]}              [description]
+ 		 */
+ 		resumeCurrentSelectDcs(uuid){
+ 			let vm = this
+ 			let url =  "/run/resume"
+ 			let params = {
+ 				run_uuid: uuid
+ 			}
+ 			vm.$axios.post(url, params).then(response => {
+ 				if(response.status == 200){
+ 					if(!vm.$_.isEmpty(response.data)){
+ 						vm.runResultStatus = true
+ 						vm.currentRunResult = response.data
+ 						vm.$bus.$emit('isCurrentDcsRun', true)
+ 						vm.$bus.$emit('currentRunDcs', response.data.obj);
+ 						if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+	   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
+	 					}
+ 					}else{
+ 						vm.runResultStatus = false
+ 						vm.$bus.$emit('isCurrentDcsRun', false)
+ 					}
+ 				}else{
+ 					vm.$message.warning('获取当前恢复列表数据信息！')
+ 				}
+ 			}).catch(response => {
+ 				console.log(response + '恢复停止列表数据信息出错！')
+ 			})
+ 		},
  		/**
  		 * @Author      supper520love@126.com
  		 * @DateTime    2018-05-21
@@ -164,6 +243,7 @@
  				if(response.status == 200){
  					if(!vm.$_.isEmpty(response.data)){
  						vm.runResultStatus = true
+ 						vm.$bus.$emit('isCurrentDcsRun', true)
  						vm.currentRunResult = response.data
  						vm.$bus.$emit('currentRunDcs', response.data.obj);
  						if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
@@ -171,6 +251,7 @@
 	 					}
  					}else{
  						vm.runResultStatus = false
+ 						vm.$bus.$emit('isCurrentDcsRun', false)
  					}
  				}else{
  					vm.$message('当前运行规程出错，请重新请求！')
@@ -201,10 +282,12 @@
  			vm.$axios.post(url, params).then(response=>{
  				if(response.status == 200){
  					vm.runResultStatus = true
- 					vm.loopStatus = response.data.loop
+ 					vm.$bus.$emit('isCurrentDcsRun', true) //当前有规程在运行
+ 					vm.loopStatus = response.data.can_run_next
  					vm.nextStatus = response.data.has_next
  					vm.intervalTime();
  				}else{
+ 					vm.$bus.$emit('isCurrentDcsRun', false)
  					vm.$message.warning('当前扫执行规程出错，请重新请求！')
  				}
  			}).catch(response=>{
@@ -223,13 +306,17 @@
  			vm.$axios.get(url).then(response=>{
  				if(response.status == 200){
  					vm.currentRunResult = response.data
- 					vm.loopStatus = response.data.loop
+ 					vm.loopStatus = response.data.can_run_next
  					vm.nextStatus = response.data.has_next
- 					
- 					if(!vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
+ 					if(vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
  						vm.goRunStep()
- 					}else if(!vm.nextStatus){
+ 					}else if(!vm.nextStatus && !vm.isLoop){
+ 						vm.$message.info('当前规程执行完成！');
+ 						vm.$bus.$emit('isDisabled', false);
+ 						vm.initCurrentDatas()
  						vm.clearInterval()
+ 					}else if(!vm.nextStatus && vm.isLoop){ //轮循执行
+ 						vm.getRunBegin()
  					}
  					if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
    					vm.comparisonData(vm.currentProjectMessData, response.data.result)
@@ -257,7 +344,7 @@
  			}
  			vm.$axios.post(url, params).then(response => {
  				if(response.status == 200){
- 					vm.loopStatus = response.data.loop
+ 					vm.loopStatus = response.data.can_run_next
  					vm.nextStatus = response.data.has_next
  				}
  			})
@@ -272,6 +359,7 @@
  				if(response.status == 200){
     			vm.clearInterval()
  					vm.runResultStatus = false
+ 					vm.$bus.$emit('isCurrentDcsRun', false) //当前没有规程在运行
  					vm.$bus.$emit('readyStopRun', false);
  					vm.$message.info('成功退出当前规程执行！')
  				}else{
@@ -305,9 +393,12 @@
  				   	 targetReplaceData[c_key][4] = vm.$_.toString(actualResult)
  				   	 if(c_item.status == true){
  				   	  targetReplaceData[c_key][5] = c_item.status	
+ 				   	  targetReplaceData[c_key][6] = ''
  				   	 }else{
+ 				   	 	targetReplaceData[c_key][5] = ''
  				   	 	targetReplaceData[c_key][6] = c_item.status
  				   	 }
+ 				   	 vm.isRunOk(c_key)
 	 				 })	
  				 }
  				 
@@ -320,7 +411,13 @@
  			if(compact.length == 1){
  				return true
  			}
- 			
+ 		},
+ 		currentTableHead(data){
+ 			let vm = this
+ 			let compact = vm.$_.compact(data);
+ 			if(vm.$_.includes(compact, "测试用例")|| vm.$_.includes(compact, "序号") || vm.$_.includes(compact, "操作") ){
+ 				return true
+ 			}
  		},
 
  		/*是否已经执行过了*/
@@ -376,6 +473,15 @@
    		&.noLb{
    			border-left:none;
    		}
+   		&.tdCenter{
+   			text-align: center;
+   			font-size:1.8rem;
+   		}
+   		&.valTitle{
+   			background:#E4E7ED;
+   			// font-size:1.5rem;
+   			// font-weight:bold;
+   		}
    	}
    	//执行的当前tr
    	&.dcs-run-current{
@@ -386,7 +492,7 @@
 		//已经执行的tr
 		&.dcs-run-has{
 			td{
-				background: #f5f7fa
+				background: #F2F6FC
 			}
 		}	
    }

@@ -134,7 +134,7 @@
 <script>
  import types from "../../store/project/types";
  import {mapGetters } from "vuex";
- import {_initCurrentOpenPro} from "../../util/common";
+ import {_initCurrentOpenPro,sticky} from "../../util/common";
  export default{
  	name:'headerNav',
  	data(){
@@ -162,9 +162,8 @@
   },
   created(){
   	let vm = this
-  	vm.$bus.$on('readyStopRun', msg=>{
- 				vm.status.isStopDisabled = msg
- 			})
+  	
+  	
   	vm.$bus.$on('currentProKey', msg=>{
   		if(msg){
   			vm.isCurrentPro = true
@@ -172,14 +171,51 @@
   			vm.isCurrentPro = false
   		}
   	})
+
+  	/*
+  	执行规程导航，如果当前没有规程在执行 测button 恢复可操作状态
+  	 */  	
+  	vm.$bus.$on('readyStopRun', msg=>{
+ 				vm.status.isStopDisabled = msg
+ 			})
+  	vm.$bus.$on('isAutoDisabled', msg=>{
+  		vm.status.isAutoDisabled = msg
+  	})
+  	vm.$bus.$on('isPauseDisabled', msg=>{
+  		vm.status.isPauseDisabled = msg
+  	})
+  	vm.$bus.$on('isGoOnDisabled', msg=>{
+  		vm.status.isGoOnDisabled = msg
+  	})
+  	vm.$bus.$on('isLoopDisabled', msg=>{
+  		vm.status.isLoopDisabled = msg
+  	})
+  	vm.$bus.$on('isSingleDisabled', msg=>{
+  		vm.status.isSingleDisabled = msg
+  	})
+  },
+  mounted(){
+  	let vm = this
+  	vm.sticky()
   },
  	methods:{
+ 		sticky,
  		_initCurrentOpenPro,
  		uploadSuccess(response, file, fileList){
  			let vm = this
  			vm._initCurrentOpenPro()
  			vm.$message.success('导入成功')
  		},
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启自动执行规程}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		automaticOperation(){
  			let vm = this
  			if(!vm.isCurrentPro){
@@ -195,6 +231,16 @@
  			vm.$bus.$emit('singleOperation', false)
  			vm.$bus.$emit('automaticOperation', true)
  		},
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启单步执行规程}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		singleOperation(){
  			let vm = this
  			if(!vm.isCurrentPro){
@@ -210,7 +256,16 @@
  			vm.$bus.$emit('singleOperation', true)
  			vm.$bus.$emit('automaticOperation', false)
  		},
-
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启执行规程暂停}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		pause(){
  			let vm = this
  			vm.status.isPauseDisabled = true
@@ -221,7 +276,16 @@
  			vm.status.isLoopDisabled = false
  			vm.$bus.$emit('pause', true)
  		},
-
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启继续执行规程}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		goOnRun(){
  			let vm = this
  			vm.status.isGoOnDisabled = true
@@ -232,6 +296,16 @@
  			vm.status.isLoopDisabled = false
  			vm.$bus.$emit('goOnRun', true)
  		},
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启停止执行规程}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		isStopRunFun(){
     	let vm = this
     	vm.status.isStopDisabled = true
@@ -242,6 +316,16 @@
  			vm.status.isLoopDisabled = false
     	vm.$bus.$emit('stopRun', true);
     },
+    /**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-29
+ 		 * @discription {{开启循环执行规程}}
+ 		 * @param       {}
+ 		 * @requires    {}
+ 		 * @return      {}
+ 		 * @version     [version]
+ 		 * @return      {[boolean]}              [description]
+ 		 */
  		loopGoOnRun(){
  			let vm = this
  			vm.status.isLoopDisabled = true
@@ -283,7 +367,7 @@
     },
     popTestTable(){
     	let vm = this
- 			vm.$bus.$emit('stopTestList', true);
+ 			vm.$bus.$emit('stopDcsListShow', true);
     },
     trendManage(){
     	let vm = this

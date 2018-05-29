@@ -1,9 +1,18 @@
 @charset "UTF-8";
 .header{
   width:100%;
-  // height:15.2rem;
-  
+  background:#f2f2f2;
+  // position: -webkit-sticky;
+  // @include prefixer-value(position, sticky);
+  // top:0;
+  // left:0;
+  &.sticky{
+    position:fixed;
+    top:0;
+    z-index:3;
+  }
 }
+
 .common-content{
   width:100%;
 }

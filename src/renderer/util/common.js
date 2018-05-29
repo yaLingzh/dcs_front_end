@@ -7,6 +7,22 @@ import {sync} from 'vuex-router-sync'
 import vueFilter from 'vue-filter'
 import types from '../store/project/types'
 import Bus from './bus.js';
+
+export function sticky(){
+  let vm = this
+  document.addEventListener('scroll', _onScroll);
+}
+function _onScroll(e) {
+  let header = document.querySelector('.header'); 
+  let bodyContent = document.querySelector('.body-content'); 
+  let sideLeft = document.querySelector('.side-left'); 
+  let sideRight = document.querySelector('.side-right'); 
+  let origOffsetY = header.offsetTop; 
+  window.scrollY > origOffsetY ? header.classList.add('sticky') : header.classList.remove('sticky'); 
+  window.scrollY > origOffsetY ? bodyContent.classList.add('sticky-pt') : bodyContent.classList.remove('sticky-pt'); 
+  window.scrollY > origOffsetY ? sideLeft.classList.add('sticky') : sideLeft.classList.remove('sticky'); 
+  window.scrollY > origOffsetY ? sideRight.classList.add('sticky-pl') : sideRight.classList.remove('sticky-pl'); 
+ } 
 /**
  * app初始化，注入一些插件，vue原型属性和方法
  */

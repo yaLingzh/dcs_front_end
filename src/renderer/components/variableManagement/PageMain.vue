@@ -3,10 +3,10 @@
    <headerNav></headerNav>
   <div class="body-content">
     <el-row :gutter="0">
-      <el-col :span="4">
+      <el-col :span="4" class="side-left">
         <left-menu :variablePointsGroup="variablePointsGroup" :isRefreshMenu="isRefreshMenu" :activeName='liActiveName'></left-menu>
       </el-col>
-      <el-col :span="20">
+      <el-col :span="20" class="side-right">
         <div class="grid-content grid-bg-purple">
           <!-- <p class="grid-middle-title"><em class="el-icon-minus"></em></p> -->
           <el-tabs v-model="editVeriableTabsValue" type="card" closable @tab-remove="removeVaribleTab">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {setStorageDataAndEncode} from "../../util/common";
+  import {setStorageDataAndEncode, sticky} from "../../util/common";
 export default {
   name: 'variableManagement',
   data () {
@@ -93,9 +93,14 @@ export default {
     })
 
   },
+  mounted(){
+    let vm = this
+    vm.sticky()
+  },
   
 
   methods: {
+    sticky,
     setStorageDataAndEncode,
     /*获取变量组列表*/
     initPointsGroup(){

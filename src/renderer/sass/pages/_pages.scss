@@ -16,16 +16,33 @@
 }
 .body-content{
 	overflow: hidden;
-	backgorund:#fff;
+	// background:#fff;
+	&.sticky-pt{
+		  // position:fixed;
+		  // top:168px;
+	    padding-top:172px;
+	}
 }
 
+.side-left{
+	&.sticky{
+		position:fixed;
+		top:172px;
+	}
+}
+.side-right{
+	&.sticky-pl{
+		// padding-left:16.66667%;
+		float:right;
+	}
+}
 
 .left-menu-tree-title{
 	@include height(true, 3.5rem, 3.5rem);
 	@extend %relative;
 	padding:0 1rem;
 	color:#fff;
-	font-size:1.6rem;
+	font-size:1.5rem;
 	background:#7fabd8;
 	em{
 		@extend %absolute;
@@ -131,14 +148,14 @@
  	margin: 1.5rem 0;
  }
  .let-var-menus{
- 	max-height:80rem;
+ 	max-height:79rem;
  	overflow-y:auto;
  	 li{
  	 	line-height: 3rem;
- 	 	padding:1rem 0 1rem 2.5rem;
+ 	 	padding:0.5rem 0 0.5rem 2.5rem;
  	 	background:#F2F6FC;
  	 	border-bottom:#DCDFE6 solid 1px;
- 	 	font-size:1.5rem;
+ 	 	font-size:1.3rem;
  	 	@extend %relative;
  	 	&:hover, &.active{
  	 		background:#409EFF;
@@ -216,13 +233,24 @@
  			line-height: 2.5rem;
  			padding:0.6rem 0 0.6rem;
  			padding-left:1rem;
- 			background:#ebeef5;
+ 			background:#DCDFE6;
  			border-bottom:0.1rem solid #f5f7fa;
  			border-left:0.1rem solid #f5f7fa;
  		}
  	}
  	tbody{
  		tr{
+ 			&.tabHead{
+ 				td{
+ 					line-height: 2.5rem;
+		 			padding:0.6rem 0 0.6rem;
+		 			padding-left:1rem;
+		 			background:#DCDFE6;
+		 			font-weight: bold;
+		 			border-bottom:0.1rem solid #f5f7fa;
+		 			border-left:0.1rem solid #f5f7fa;
+ 				}
+ 			}
  			td{
 		 		line-height: 2.8rem;
 		 		padding:1rem;
@@ -231,8 +259,17 @@
 		 		border-left:0.1rem solid #ebeef5;
 		 	}
 		 	&:hover{
+		 		&.tabHead{
+ 					td{
+ 						background:#DCDFE6;
+ 					}
+ 				}
 		 			td{
 		 				background:#f5f7fa;
+		 				&td.valTitle{
+		 					background:#F2F6FC;
+		 				}
+
 		 			}
 		 	}
  		}

@@ -1,9 +1,8 @@
 <template>
  <div>
  	<div class="variableSearchBox">
-	  <el-select v-model="filter.column" class="m-r-15" placeholder="请选择">
+	  <el-select v-model="filter.column" size="mini" class="m-r-15" placeholder="请选择">
 	    <el-option
-	      size="mini"
 	      v-for="item in isShowTheadName(theaderDatas)"
 	      :key="item.name"
 	      :label="item.display"
@@ -12,8 +11,8 @@
 	      >
 	    </el-option>
 	  </el-select>
-	  <el-input style="width:15%" v-model="filter.columVal" class="m-r-15" placeholder="请输入内容"></el-input>
-	  <el-select v-model="filter.assocs" style="width: 6%" class="m-r-15" placeholder="请选择">
+	  <el-input style="width:15%" size="mini" v-model="filter.columVal" class="m-r-15" placeholder="请输入内容"></el-input>
+	  <el-select v-model="filter.assocs" size="mini" style="width: 9%" class="m-r-15" placeholder="请选择">
 	    <el-option
 	      v-for="item in assocs"
 	      :key="item.value"
@@ -21,7 +20,7 @@
 	      :value="item.value">
 	    </el-option>
 	  </el-select>
-	  <el-select v-model="filter.column2" class="m-r-15" placeholder="请选择">
+	  <el-select v-model="filter.column2" size="mini" class="m-r-15" placeholder="请选择">
 	    <el-option
 	      v-for="item in isShowTheadName(theaderDatas)"
 	      :key="item.name"
@@ -31,7 +30,7 @@
 	      >
 	    </el-option>
 	  </el-select>
-	  <el-input style="width:15%" class="m-r-15"  v-model="filter.columVal2" placeholder="请输入内容"></el-input>
+	  <el-input style="width:15%" size="mini" class="m-r-15"  v-model="filter.columVal2" placeholder="请输入内容"></el-input>
 	  <el-button type="primary" @click="searchDataResult" size="small" plain>检 索</el-button>
  	</div>
  	<!-- {{variablePointDatas|log}} -->
@@ -45,7 +44,6 @@
       >
        <el-table-column
         :label="head.display"
-        width="100"
         v-for="(head, index) in isShowTheadName(theaderDatas)"
         v-if="head.name == 'force_value_display'"
         :key="head.name"
@@ -64,7 +62,6 @@
         </el-table-column>
         <el-table-column
 	        :label="head.display"
-	        width="130"
 	        v-for="(head, index) in isShowTheadName(theaderDatas)"
 	        v-if="head.name == 'current_value_display'"
 	        :key="head.name"
@@ -76,7 +73,6 @@
       <el-table-column
         :prop="head.name"
         :label="head.display"
-        width="150"
         v-for="head in isShowTheadName(theaderDatas)"
         v-if="head.name != 'force_value_display' && head.name != 'current_value_display'"
         :key="head.name"

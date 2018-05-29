@@ -38,28 +38,39 @@
 				filterText: '',
         defaultActive:1,
         menuData:['cases','case_groups','procedures'],
-        treeAllDatas:[],
+        treeAllData:[],
         defaultCheckedKeys:[],
         defaultProps: {
           children: 'children',
           label: 'label'
         },
-        targetRunDcs:null,
 			}
 		},
     computed:{
       ...mapGetters({
           vxGlobal_curProjectDcs: types.GETTERS.curProjectDcs,
       }),
+      treeAllDatas(){
+        return this.treeAllData
+      }
     },
     created(){
       let vm = this 
       vm.initMenuTreeDatas()
+    },
+    mounted(){
+      let vm = this 
       vm.$bus.$on('currentRunDcs', msg=>{
         if(!msg) return
-        // vm.targetRunDcs = msg
-        vm.needSetCheckedKeys(msg)
-        vm.getCheckedNodes()
+        if(msg.isStopData){
+          vm.getRepeatData(msg)
+        }
+        vm.defaultCheckedKeys = []
+        vm.$refs.treeProDatas.setCheckedKeys([]);
+        vm.$nextTick(()=>{
+          vm.needSetCheckedKeys(msg)
+          vm.getCheckedNodes()  
+        })
       })
     },
 		watch: {
@@ -70,6 +81,52 @@
 
     methods: {
       _initCurrentOpenPro,
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-05-29
+       * @discription {{是否有重复的结点数据}}
+       * @param       {viue选中要运行的 dcs obj}
+       * @requires    {无}
+       * @return      {booleran}
+       * @version     [01]
+       * @return      {[type]}                  [description]
+       */
+      getRepeatData(obj){
+        let vm = this
+        let objData = JSON.parse(JSON.stringify(obj))
+        let isRepatData = vm.$_.map(vm.treeAllDatas, (item, index)=>{
+          // if(item.children){
+          //   let getRepeatNode = item.children.map(node_item => {return node_item.number == obj.number && node_item.currentLevel == obj.type})
+          //   if(vm.$_.has(getRepeatNode, true)){
+          //     return true
+          //   }else{
+          //     return false
+          //   }
+          // } 
+          if(item.label == objData.label){
+            return true
+          }else{
+            return false
+          }
+        })
+        let isTrue = vm.$_.toString(isRepatData.filter(item =>{return item == true}))
+        if(isTrue == 'true'){
+          vm.$message.warning('已经在运行规程中！');
+          return false
+        }else{
+          vm.treeAllData.push(obj) 
+        }
+      },
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-05-29
+       * @discription {{初始化结点数据}}
+       * @param       {}
+       * @requires    {}
+       * @return      {}
+       * @version     [version]
+       * @return      {[obj]}              [description]
+       */
       initMenuTreeDatas(){
         let vm = this
         let treeDatas = {}
@@ -91,11 +148,13 @@
             currentLevel:null,
             children: child
           }
-          vm.treeAllDatas.push(treeDatas)
+          vm.treeAllData.push(treeDatas)
         })
+        // console.log(vm.treeAllDatas, 'treeAllDatas')
       },
       getCurrentNodeData(value, data, node){
         let vm = this
+        vm.defaultCheckedKeys = []
         vm.$refs.treeProDatas.setCheckedKeys([]);
         vm.$bus.$emit('currentProKey', value)
       },
@@ -103,20 +162,45 @@
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
-
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-05-29
+       * @discription {{设置默认选中接点}}
+       * @param       {当前接点信息}
+       * @requires    {}
+       * @return      {选中接点}
+       * @version     [version]
+       * @param       {[obj]}              datas [description]
+       * @return      {[obj]}                    [description]
+       */
       needSetCheckedKeys(datas){
         let vm = this
-        
-        vm.treeAllDatas.forEach(p_item=>{
-          let nodeKeys = p_item.children.filter(c_child=>{
-            return datas.number == c_child.number && datas.type == c_child.obj_type
+        vm.defaultCheckedKeys = []
+        if(!datas.isStopData){
+          vm.treeAllDatas.forEach(p_item=>{ 
+            let nodeKeys = p_item.children.filter(c_child=>{
+              return datas.number == c_child.number && datas.type == c_child.obj_type
+            })
+            if(!vm.$_.isEmpty(nodeKeys)){
+              vm.defaultCheckedKeys.push(nodeKeys[0].id)
+            } 
           })
-          if(!vm.$_.isEmpty(nodeKeys)){
-            vm.defaultCheckedKeys.push(nodeKeys[0].id)
-          }
-        })
-        vm.$refs.treeProDatas.setCheckedKeys(vm.$_.flatten(vm.defaultCheckedKeys))
+        }else{
+            vm.defaultCheckedKeys.push(datas.id)
+        }
+        vm.$refs.treeProDatas.setCheckedKeys([]);
+        vm.$refs.treeProDatas.setCheckedKeys(_.flatten(vm.defaultCheckedKeys))
       },
+      /**
+       * @Author      supper520love@126.com
+       * @DateTime    2018-05-29
+       * @discription {{获取当前选中接点}}
+       * @param       {}
+       * @requires    {}
+       * @return      {}
+       * @version     [01]
+       * @return      {[obj]}              [description]
+       */
       getCheckedNodes() {
         let vm = this
         let nodeKey = this.$refs.treeProDatas.getCheckedKeys()

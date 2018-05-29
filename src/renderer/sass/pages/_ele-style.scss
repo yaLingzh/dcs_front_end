@@ -11,7 +11,7 @@
 .el-tabs__item{
 	@include height(true, 3.5rem, 3.5rem);
 	margin-top:0.3rem;
-	font-size:1.6rem;
+	font-size:1.4rem;
 	color:#4583c0;
 	border-radius:0.5rem 0.5rem 0 0;
 	&.is-active{
