@@ -13,7 +13,7 @@
 			<tbody>
 				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index"  :class="{'dcs-run-has': isRunOk(index), 'tabHead':currentTableHead(valRow) == true}">
 				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
-					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'td5':index==5}">
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'tdCenter':(index==5||index==6)&&val == true}">
 						<span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
 					 <span v-else-if="val == false && ! $_.isEmpty(val) && index ==6"><em class="el-icon-close"></em></span>
 					 <span v-else>{{val}}</span>
@@ -31,7 +31,7 @@
 			<tbody>
 				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': isRunOk(index),'tabHead':currentTableHead(valRow)}" :key="'row_'+index" >
 				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
-					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'tdCenter':index==5||index==6}">
+					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'tdCenter':(index==5||index==6)&&val == true}">
 					 <span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
 					 <span v-else-if="(val == false||val==0) && !$_.isEmpty(val) && index ==6"><em class="el-icon-close"></em></span>
 					 <span v-else>{{val}}</span>
