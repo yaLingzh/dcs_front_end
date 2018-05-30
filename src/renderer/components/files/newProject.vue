@@ -163,7 +163,7 @@
  				'username': vm.vxGlobal_roles.userName,
  				'password': vm.vxGlobal_roles.userPass
  			}
- 			vm.$axios.post(url, {params}).then(response=>{
+ 			vm.$axios.post(url, params).then(response=>{
  				if(response.status == 200){
  					let datas = response.data
  					vm.$bus.$emit('mainpageshowbox', true)
@@ -184,7 +184,7 @@
 				    "username": vm.vxGlobal_roles.userName,
  			      "password": vm.vxGlobal_roles.userPass
 		 			}
- 					vm.$axios.post(url, {params}).then(response=>{
+ 					vm.$axios.post(url, params).then(response=>{
  						if(response.status == 200){
  							let datas =  response.data
  							// console.log(datas, 'datas');

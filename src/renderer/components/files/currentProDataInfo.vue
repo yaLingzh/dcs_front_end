@@ -11,7 +11,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index"  :class="{'dcs-run-has': index == isRunOk(index), 'tabHead':currentTableHead(valRow) == true}">
+				<tr v-if="index > 3" v-for="(valRow, index) in currentProjectMessData" :key="'row_'+index"  :class="{'dcs-run-has': isRunOk(index), 'tabHead':currentTableHead(valRow) == true}">
 				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
 					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'td5':index==5}">
 						<span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
@@ -29,7 +29,7 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': index == isRunOk(index),'tabHead':currentTableHead(valRow)}" :key="'row_'+index" >
+				<tr v-if="index > 4" v-for="(valRow, index) in currentProjectMessData" :class="{'dcs-run-has': isRunOk(index),'tabHead':currentTableHead(valRow)}" :key="'row_'+index" >
 				  <td v-if="colspan(valRow) == true" class="valTitle" colspan="9">{{valRow[0]}}</td>
 					<td v-else v-for="(val, index) in valRow" :key="'cell_'+index" :class="{'tdCenter':index==5||index==6}">
 					 <span v-if="(val == true||val == 1) && index ==5"><em class="el-icon-check"></em></span>
@@ -72,10 +72,11 @@
           vxGlobal_curProjectDcs: types.GETTERS.curProjectDcs,
       }),
   },
+
  	created(){
  		let vm = this
  		vm.initCurrentDatas(); 
- 		setTimeout(vm.intervalTime, 1000);
+ 		// setTimeout(vm.intervalTime, 1000);
  		vm.$bus.$on('currentProKey', msg=>{
  			vm.currentProjectData = msg
  			//今年列表数据 
@@ -85,19 +86,21 @@
  				vm.intervalTime();
  				return
  			}
+
  			vm.resultMsg = msg.currentLevel
 			if(msg.level != 1 && !vm.$_.isEmpty(vm.resultMsg)){
 			  let currentProject = vm.$_.filter(vm.vxGlobal_curProjectDcs[vm.resultMsg], item=>{if(item.name == msg.label) {return item.content_rows}})
-			  vm.currentProjectMessData = currentProject[0].content_rows
+			  	vm.currentProjectMessData = currentProject[0].content_rows
 			}else{
 				return
 			}
 
  		})
- 		vm.$watch('currentProjectData', ()=>{
- 			vm.runResultStatus = false
- 			vm.currentRunResult = null
- 		})
+
+ 		// vm.$watch('currentProjectData', ()=>{
+ 		// 	vm.runResultStatus = false
+ 		// 	vm.currentRunResult = null
+ 		// })
 
  		vm.$bus.$on('automaticOperation', msg=>{
  			vm.isAutomaticOperation = msg
@@ -126,7 +129,6 @@
  				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
  				return
  			}
- 			console.log(msg, 'sotp')
  			vm.stopRunStep()
  		})
 
@@ -157,22 +159,60 @@
  		})
  		
  		vm.$bus.$on('loopGoOnRun', msg=>{
- 			if(!vm.runResultStatus){
- 				vm.$bus.$emit('isLoopDisabled', false)
- 				vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
- 				return
- 			}
- 			if(msg&&vm.$_.isEmpty(vm.currentRunResult)){
- 				vm.isLoop = msg
+ 			// if(!vm.runResultStatus){
+ 			// 	vm.$bus.$emit('isLoopDisabled', false)
+ 			// 	vm.$message.warning('没有规程在执行!请打开一个规程并让其执行！')
+ 			// 	return
+ 			// }
+ 			// 
+ 			vm.isLoop = msg
+ 			if(msg&&!vm.runResultStatus){
  				vm.getRunBegin()
+ 			}else{
+ 				vm.intervalTime();
  			}
  		})
- 		
  	},
  	mounted(){
  		let vm = this
  	},
  	methods:{
+ 		/**
+ 		 * @Author      supper520love@126.com
+ 		 * @DateTime    2018-05-21
+ 		 * @discription {初始化执行的规程数据}
+ 		 * @param       {无}
+ 		 * @requires    {200}
+ 		 * @return      {Object}
+ 		 * @version     [1]
+ 		 * @return      {[Object]}              
+ 		 */
+ 		initCurrentDatas(){
+ 			let vm = this
+ 			let url = '/run/current'
+ 			vm.$axios.get(url).then(response=>{
+ 				if(response.status == 200){
+ 					if(!vm.$_.isEmpty(response.data)){
+ 						vm.currentRunResult = response.data
+ 						vm.runResultStatus = true
+ 						vm.$bus.$emit('isCurrentDcsRun', true)
+ 						vm.$bus.$emit('currentRunDcs', response.data.obj);
+ 						vm.$nextTick(()=>{
+ 							if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+		   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
+		 					}
+ 						})
+ 					}else{
+ 						vm.runResultStatus = false
+ 						vm.$bus.$emit('isCurrentDcsRun', false)
+ 					}
+ 				}else{
+ 					vm.$message('当前运行规程出错，请重新请求！')
+ 				}
+ 			}).catch(response=>{
+ 				vm.$message('当前运行规程出错，请重新请求, 请联系管理员！')
+ 			})
+ 		},
  		stopCurrentDcsDatas(uuid){
  			let vm = this
  			let url = '/run/resume/contents'
@@ -212,9 +252,11 @@
  						vm.currentRunResult = response.data
  						vm.$bus.$emit('isCurrentDcsRun', true)
  						vm.$bus.$emit('currentRunDcs', response.data.obj);
- 						if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
-	   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
-	 					}
+ 						vm.$nextTick(()=>{
+ 						  if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+		   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
+		 					}
+		 				})
  					}else{
  						vm.runResultStatus = false
  						vm.$bus.$emit('isCurrentDcsRun', false)
@@ -226,40 +268,7 @@
  				console.log(response + '恢复停止列表数据信息出错！')
  			})
  		},
- 		/**
- 		 * @Author      supper520love@126.com
- 		 * @DateTime    2018-05-21
- 		 * @discription {初始化执行的规程数据}
- 		 * @param       {无}
- 		 * @requires    {200}
- 		 * @return      {Object}
- 		 * @version     [1]
- 		 * @return      {[Object]}              
- 		 */
- 		initCurrentDatas(){
- 			let vm = this
- 			let url = '/run/current'
- 			vm.$axios.get(url).then(response=>{
- 				if(response.status == 200){
- 					if(!vm.$_.isEmpty(response.data)){
- 						vm.runResultStatus = true
- 						vm.$bus.$emit('isCurrentDcsRun', true)
- 						vm.currentRunResult = response.data
- 						vm.$bus.$emit('currentRunDcs', response.data.obj);
- 						if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
-	   				 vm.comparisonData(vm.currentProjectMessData, response.data.result)
-	 					}
- 					}else{
- 						vm.runResultStatus = false
- 						vm.$bus.$emit('isCurrentDcsRun', false)
- 					}
- 				}else{
- 					vm.$message('当前运行规程出错，请重新请求！')
- 				}
- 			}).catch(response=>{
- 				vm.$message('当前运行规程出错，请重新请求, 请联系管理员！')
- 			})
- 		},
+ 		
     /**
      * @Author      supper520love@126.com
      * @DateTime    2018-05-21
@@ -303,24 +312,29 @@
  		 */
  		getCurrentRunResult(){
  			let vm = this, url = '/run/block_result'
+ 			if(vm.isStopRun){return}
  			vm.$axios.get(url).then(response=>{
  				if(response.status == 200){
  					vm.currentRunResult = response.data
  					vm.loopStatus = response.data.can_run_next
  					vm.nextStatus = response.data.has_next
- 					if(vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
- 						vm.goRunStep()
- 					}else if(!vm.nextStatus && !vm.isLoop){
- 						vm.$message.info('当前规程执行完成！');
- 						vm.$bus.$emit('isDisabled', false);
- 						vm.initCurrentDatas()
- 						vm.clearInterval()
- 					}else if(!vm.nextStatus && vm.isLoop){ //轮循执行
- 						vm.getRunBegin()
- 					}
- 					if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
-   					vm.comparisonData(vm.currentProjectMessData, response.data.result)
- 					}
+ 					vm.$nextTick(()=>{
+	 					if(vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
+	 						vm.goRunStep()
+	 					}else if(!vm.nextStatus && !vm.isLoop){
+	 						vm.$message.info('当前规程执行完成！');
+	 						vm.runResultStatus = false
+	 						vm.currentRunResult = null
+	 						vm.$bus.$emit('isDisabled', false);
+	 						vm.initCurrentDatas()
+	 						vm.clearInterval()
+	 					}else if(!vm.nextStatus && vm.isLoop){ //轮循执行
+	 						vm.getRunBegin()
+	 					}
+	 					if(vm.currentRunResult&&!vm.$_.isEmpty(vm.currentRunResult)){
+	   					vm.comparisonData(vm.currentProjectMessData, response.data.result)
+	 					}
+	 				})
  				}else{
  					vm.$message.warning('请求数据出错！')
  				}
@@ -424,13 +438,26 @@
  		isRunOk(key){
  			let vm = this
  			let resultKeys = {}
- 			if(vm.currentRunResult){
- 				resultKeys = vm.$_.keys(vm.currentRunResult.result)
+ 			if(!vm.currentRunResult){
+ 				console.log(vm.currentRunResult + '为空！')
+ 				return
  			}
- 			return vm.$_.toString(vm.$_.filter(resultKeys, item=>{
- 				 return item == key
- 			}))
+			resultKeys = vm.$_.keys(vm.currentRunResult.result)
+			let isOkKey = vm.$_.filter(resultKeys, item=>{
+				 return item == key
+		   	})
+ 			return isOkKey[0] == _.toString(key)
  		},
+ 		// isRunOk(key){
+ 		// 	let vm = this
+ 		// 	let resultKeys = {}
+ 		// 	if(vm.currentRunResult){
+ 		// 		resultKeys = vm.$_.keys(vm.currentRunResult.result)
+ 		// 	}
+ 		// 	return vm.$_.toString(vm.$_.filter(resultKeys, item=>{
+ 		// 		 return item == key
+ 		// 	}))
+ 		// },
  		clearInterval(){
  			let vm = this
  			clearInterval(setTimer)
@@ -446,6 +473,18 @@
  			
  		}
  	},
+ 	beforeDestory(){
+    let vm = this
+    vm.$bus.$off('currentProKey', true);
+    vm.$bus.$off('currentProjectData', true);
+    vm.$bus.$off('automaticOperation', true);
+    vm.$bus.$off('singleOperation', true);
+    vm.$bus.$off('stopRun', true);
+    vm.$bus.$off('pause', true);
+    vm.$bus.$off('goOnRun', true);
+    vm.$bus.$off('loopGoOnRun', true);
+
+  }
  }
 </script>
 

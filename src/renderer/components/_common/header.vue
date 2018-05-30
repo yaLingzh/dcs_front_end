@@ -413,6 +413,16 @@
     },
 
  	},
+ 	beforeDestory(){
+    let vm = this
+    vm.$bus.$off('currentProKey', true);
+    vm.$bus.$off('readyStopRun', true);
+    vm.$bus.$off('isAutoDisabled', true);
+    vm.$bus.$off('isPauseDisabled', true);
+    vm.$bus.$off('isGoOnDisabled', true);
+    vm.$bus.$off('isLoopDisabled', true);
+    vm.$bus.$off('isSingleDisabled', true);
+  }
 
  }
 </script>
