@@ -40,6 +40,8 @@
         menuData:['cases','case_groups','procedures'],
         treeAllData:[],
         defaultCheckedKeys:[],
+        isRun:false,
+        isCurrentRun:null,
         defaultProps: {
           children: 'children',
           label: 'label'
@@ -57,6 +59,10 @@
     created(){
       let vm = this 
       vm.initMenuTreeDatas()
+      vm.$bus.$on('isCurrentDcsRun', msg=>{ //当前是否有规程正在 进行
+        vm.isRun = msg
+      })
+     
     },
     mounted(){
       let vm = this 
@@ -65,6 +71,7 @@
         if(msg.isStopData){
           vm.getRepeatData(msg)
         }
+        vm.isCurrentRun = msg
         vm.defaultCheckedKeys = []
         vm.$refs.treeProDatas.setCheckedKeys([]);
         vm.$nextTick(()=>{
@@ -154,6 +161,14 @@
       },
       getCurrentNodeData(value, data, node){
         let vm = this
+        if(vm.isRun && vm.isCurrentRun.number != value.number ){
+          vm.$message.warning('当前' + vm.isCurrentRun.number + '正在运程，请不要离开！')
+          vm.needSetCheckedKeys(vm.isCurrentRun)
+          return false
+        }else if(vm.isRun && vm.isCurrentRun.number == value.number){
+          vm.$message.warning('正在执行规程，请不要离开！')
+          return false
+        }
         vm.defaultCheckedKeys = []
         vm.$refs.treeProDatas.setCheckedKeys([]);
         vm.$bus.$emit('currentProKey', value)

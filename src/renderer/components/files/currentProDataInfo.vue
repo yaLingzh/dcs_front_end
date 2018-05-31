@@ -139,6 +139,7 @@
  				return
  			}
  			if(msg){
+ 				vm.isStopRun = true
  				vm.$message.info('执行的规程已经暂停!');
  				vm.clearInterval()
  				vm.initCurrentDatas()
@@ -153,6 +154,7 @@
  				return
  			}
  			if(msg){
+ 				vm.isStopRun = false
  				vm.$message.info('当前执行规程已恢复执行！')
  				vm.intervalTime()
  			}
@@ -205,6 +207,7 @@
  					}else{
  						vm.runResultStatus = false
  						vm.$bus.$emit('isCurrentDcsRun', false)
+ 						vm.$bus.$emit('currentRunDcs', '');
  					}
  				}else{
  					vm.$message('当前运行规程出错，请重新请求！')
@@ -291,6 +294,7 @@
  			vm.$axios.post(url, params).then(response=>{
  				if(response.status == 200){
  					vm.runResultStatus = true
+ 					vm.$bus.$emit('currentRunDcs', response.data.obj)
  					vm.$bus.$emit('isCurrentDcsRun', true) //当前有规程在运行
  					vm.loopStatus = response.data.can_run_next
  					vm.nextStatus = response.data.has_next
@@ -322,10 +326,10 @@
 	 					if(vm.loopStatus&&vm.nextStatus&&!vm.isSingleStatus&&!vm.$_.isEmpty(response.data)){
 	 						vm.goRunStep()
 	 					}else if(!vm.nextStatus && !vm.isLoop){
-	 						vm.$message.info('当前规程执行完成！');
 	 						vm.runResultStatus = false
 	 						vm.currentRunResult = null
 	 						vm.$bus.$emit('isDisabled', false);
+	 						vm.$message.info('当前规程执行完成！');
 	 						vm.initCurrentDatas()
 	 						vm.clearInterval()
 	 					}else if(!vm.nextStatus && vm.isLoop){ //轮循执行
@@ -441,12 +445,14 @@
  			if(!vm.currentRunResult){
  				console.log(vm.currentRunResult + '为空！')
  				return
+ 			}else if(vm.currentRunResult && vm.currentProjectData.number == vm.currentRunResult.obj.number){
+ 				resultKeys = vm.$_.keys(vm.currentRunResult.result)
+				let isOkKey = vm.$_.filter(resultKeys, item=>{
+					 return item == key
+			   	})
+	 			return isOkKey[0] == _.toString(key)
  			}
-			resultKeys = vm.$_.keys(vm.currentRunResult.result)
-			let isOkKey = vm.$_.filter(resultKeys, item=>{
-				 return item == key
-		   	})
- 			return isOkKey[0] == _.toString(key)
+			
  		},
  		// isRunOk(key){
  		// 	let vm = this

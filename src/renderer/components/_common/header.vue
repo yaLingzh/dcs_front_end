@@ -141,6 +141,8 @@
  		return {
  			currentNav: 'files',
  			childNav:'',
+ 			currentRunDcsObj:null, //current 回调返回的数据
+ 			currentShowDcs:null, //通过左侧菜单 展示的DCS
  			status:{
  				languageEn:false,
  				isCurrentPro:false,
@@ -150,6 +152,7 @@
  				isPauseDisabled:false,
  				isStopDisabled:false,
  				isLoopDisabled:false,
+ 				isCurrentDcsRunBack:false,
  			}
  		}
  	},
@@ -162,10 +165,19 @@
   },
   created(){
   	let vm = this
-  	
+
+  	vm.$bus.$on('currentRunDcs', msg=>{
+  		if(msg){
+    		vm.currentRunDcsObj = msg
+  		}
+  	})
+  	vm.$bus.$on('isCurrentDcsRun', msg=>{
+  		vm.status.isCurrentDcsRunBack = msg
+  	})
   	
   	vm.$bus.$on('currentProKey', msg=>{
   		if(msg){
+  			vm.currentShowDcs = msg
   			vm.isCurrentPro = true
   		}else{
   			vm.isCurrentPro = false
@@ -193,6 +205,17 @@
   	vm.$bus.$on('isSingleDisabled', msg=>{
   		vm.status.isSingleDisabled = msg
   	})
+
+  	vm.$bus.$on('isDisabled', msg=>{
+  		console.log(msg, 'dis')
+ 				vm.status.isAutoDisabled = msg
+ 				vm.status.isSingleDisabled = msg
+ 				vm.status.isGoOnDisabled = msg
+ 				vm.status.isPauseDisabled = msg
+ 				vm.status.isStopDisabled = msg
+ 				vm.status.isLoopDisabled = msg
+ 				vm.status.isCurrentDcsRunBack = msg
+  	})
   },
   mounted(){
   	let vm = this
@@ -206,6 +229,14 @@
  			vm._initCurrentOpenPro()
  			vm.$message.success('导入成功')
  		},
+ 		isCurrentDcsRun(){
+ 			let vm = this
+ 			if(!vm.$_.isEmpty(vm.currentRunDcsObj)&& vm.currentRunDcsObj.number != vm.currentShowDcs.number){
+ 				vm.$message.warning('有后台有其它规程正在执行，不能重复执行!');
+ 				vm.$bus.$emit('currentRunDcs', vm.currentRunDcsObj)
+ 				return 
+ 			}
+ 		},
  		/**
  		 * @Author      supper520love@126.com
  		 * @DateTime    2018-05-29
@@ -218,6 +249,7 @@
  		 */
  		automaticOperation(){
  			let vm = this
+ 			vm.isCurrentDcsRun() //是否有 current 返回数据在跑
  			if(!vm.isCurrentPro){
  				vm.$message.warning('请打开要执行的规程!');
  				return false
@@ -243,6 +275,7 @@
  		 */
  		singleOperation(){
  			let vm = this
+ 			vm.isCurrentDcsRun() //是否有 current 返回数据在跑
  			if(!vm.isCurrentPro){
  				vm.$message.warning('请打开要执行的规程!');
  				return false
@@ -268,6 +301,7 @@
  		 */
  		pause(){
  			let vm = this
+
  			vm.status.isPauseDisabled = true
  			vm.status.isAutoDisabled = false
  			vm.status.isSingleDisabled = false
@@ -288,6 +322,7 @@
  		 */
  		goOnRun(){
  			let vm = this
+ 			vm.isCurrentDcsRun() //是否有 current 返回数据在跑
  			vm.status.isGoOnDisabled = true
  			vm.status.isAutoDisabled = false
  			vm.status.isSingleDisabled = false
@@ -308,6 +343,7 @@
  		 */
  		isStopRunFun(){
     	let vm = this
+    	vm.isCurrentDcsRun() //是否有 current 返回数据在跑
     	vm.status.isStopDisabled = true
     	vm.status.isAutoDisabled = false
  			vm.status.isSingleDisabled = false
@@ -328,6 +364,7 @@
  		 */
  		loopGoOnRun(){
  			let vm = this
+ 			vm.isCurrentDcsRun() //是否有 current 返回数据在跑
  			vm.status.isLoopDisabled = true
  			vm.status.isAutoDisabled = false
  			vm.status.isSingleDisabled = false
@@ -422,6 +459,7 @@
     vm.$bus.$off('isGoOnDisabled', true);
     vm.$bus.$off('isLoopDisabled', true);
     vm.$bus.$off('isSingleDisabled', true);
+    vm.$bus.$off('currentRunDcs'. true);
   }
 
  }
